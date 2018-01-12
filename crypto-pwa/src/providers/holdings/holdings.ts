@@ -86,8 +86,6 @@ export class HoldingsProvider {
         refresher.complete();
       }
 
-      //this.saveHoldings();
-
     }, err => {
 
       this.pricesUnavailable = true;
