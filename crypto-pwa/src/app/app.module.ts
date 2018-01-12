@@ -8,8 +8,7 @@ import { StatusBar } from '@ionic-native/status-bar';
 
 import { MyApp } from './app.component';
 import { HoldingsProvider } from '../providers/holdings/holdings';
-import { OAuthService, UrlHelperService } from 'angular-oauth2-oidc';
-import { AuthInterceptor } from '../providers/auth/auth.interceptor';
+import { OAuthModule } from 'angular-oauth2-oidc';
 
 @NgModule({
   declarations: [
@@ -21,7 +20,8 @@ import { AuthInterceptor } from '../providers/auth/auth.interceptor';
       preloadModules: true
     }),
     IonicStorageModule.forRoot(),
-    HttpClientModule
+    HttpClientModule,
+    OAuthModule.forRoot(),
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -31,9 +31,7 @@ import { AuthInterceptor } from '../providers/auth/auth.interceptor';
     StatusBar,
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
-    HoldingsProvider,
-    OAuthService,
-    UrlHelperService
+    HoldingsProvider
   ]
 })
 export class AppModule {

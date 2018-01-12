@@ -1,6 +1,5 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Storage } from '@ionic/storage';
 import { Observable } from 'rxjs/Observable';
 import { forkJoin } from 'rxjs/observable/forkJoin';
 import { timeoutWith } from 'rxjs/operators';
@@ -17,10 +16,11 @@ interface Holding {
 @Injectable()
 export class HoldingsProvider {
 
+  public HOLDINGS_API = 'http://localhost:8080/api/holdings';
   public holdings: Holding[] = [];
   public pricesUnavailable: boolean = false;
 
-  constructor(private http: HttpClient, private storage: Storage, private oauthService: OAuthService) {
+  constructor(private http: HttpClient, private oauthService: OAuthService) {
   }
 
   addHolding(holding: Holding): void {
@@ -35,22 +35,27 @@ export class HoldingsProvider {
     this.saveHoldings();
   }
 
+  onError(error): void {
+    console.error('ERROR: ', error);
+  }
+
+  getHeaders(): HttpHeaders {
+    return new HttpHeaders().set('Authorization', this.oauthService.authorizationHeader())
+  }
+
   saveHoldings(): void {
-    this.storage.set('cryptoHoldings', this.holdings);
+    this.http.post(this.HOLDINGS_API, this.holdings,{headers: this.getHeaders()}).subscribe(data => {
+      console.log('holdings', data);
+    }, this.onError);
   }
 
   loadHoldings(): void {
-    this.storage.get('cryptoHoldings').then(holdings => {
-
+    this.http.get(this.HOLDINGS_API,{headers: this.getHeaders()}).subscribe((holdings: Holding[]) => {
       if (holdings !== null) {
         this.holdings = holdings;
         this.fetchPrices();
       }
-    });
-
-    this.http.get('http://localhost:8080/hello-oauth',
-      {headers: new HttpHeaders().set('Authorization', this.oauthService.authorizationHeader()), responseType: 'text'}
-    ).subscribe(data => console.log('response: ', data));
+    }, this.onError);
   }
 
   verifyHolding(holding): Observable<any> {
@@ -81,7 +86,7 @@ export class HoldingsProvider {
         refresher.complete();
       }
 
-      this.saveHoldings();
+      //this.saveHoldings();
 
     }, err => {
 

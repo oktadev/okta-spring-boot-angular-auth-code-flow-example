@@ -1,11 +1,10 @@
-package com.okta.developer.crypto;
+package com.okta.developer.holdingsapi;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.Ordered;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
@@ -20,10 +19,10 @@ import java.util.Collections;
 @EnableResourceServer
 @RestController
 @SpringBootApplication
-public class CryptoApplication {
+public class HoldingsApiApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(CryptoApplication.class, args);
+		SpringApplication.run(HoldingsApiApplication.class, args);
 	}
 
     @GetMapping("/hello-oauth")
