@@ -46,8 +46,8 @@ public class HoldingsController {
     public Holding[] saveHoldings(@RequestBody Holding[] holdings, Principal principal) {
         User user = client.getUser(principal.getName());
         try {
-            String holdingAsJSON = mapper.writeValueAsString(holdings);
-            user.getProfile().put(HOLDINGS_ATTRIBUTE_NAME, holdingAsJSON);
+            String json = mapper.writeValueAsString(holdings);
+            user.getProfile().put(HOLDINGS_ATTRIBUTE_NAME, json);
             user.update();
         } catch (JsonProcessingException e) {
             System.err.println(("Error saving Okta custom data: " + e.getMessage()));
