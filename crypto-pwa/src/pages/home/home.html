@@ -15,7 +15,7 @@
   <h1>Welcome, {{ name }}</h1>
   <div class="message" *ngIf="!holdingsProvider.holdings.length">
     <p><strong>cryptoPWA</strong> is a <strong>P</strong>rogressive <strong>W</strong>eb <strong>A</strong>pplication
-      that allows you to keep track of the approximate worth of your cryptocurency portfolio.</p>
+      that allows you to keep track of the approximate worth of your cryptocurrency portfolio.</p>
 
     <p>Click the button below to start tracking your coins in whatever currency you wish!</p>
 
@@ -45,9 +45,7 @@
     </ion-item-sliding>
   </ion-list>
 
-  <button ion-button (click)="logout()">
-    Logout
-  </button>
+  <button ion-button (click)="logout()">Logout</button>
 </ion-content>
 
 <ion-footer padding>

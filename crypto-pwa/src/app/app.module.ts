@@ -2,7 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { ErrorHandler, NgModule } from '@angular/core';
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
 import { IonicStorageModule } from '@ionic/storage';
-import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+import { HttpClientModule } from '@angular/common/http';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { StatusBar } from '@ionic-native/status-bar';
 
@@ -21,7 +21,7 @@ import { OAuthModule } from 'angular-oauth2-oidc';
     }),
     IonicStorageModule.forRoot(),
     HttpClientModule,
-    OAuthModule.forRoot(),
+    OAuthModule.forRoot()
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -34,5 +34,4 @@ import { OAuthModule } from 'angular-oauth2-oidc';
     HoldingsProvider
   ]
 })
-export class AppModule {
-}
+export class AppModule {}

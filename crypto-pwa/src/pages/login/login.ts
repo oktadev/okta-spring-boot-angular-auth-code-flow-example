@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, App } from 'ionic-angular';
+import { IonicPage, App } from 'ionic-angular';
 import { JwksValidationHandler, OAuthService } from 'angular-oauth2-oidc';
 
 @IonicPage({
@@ -12,7 +12,7 @@ import { JwksValidationHandler, OAuthService } from 'angular-oauth2-oidc';
 export class LoginPage {
 
   constructor(private oauthService: OAuthService, private app: App) {
-    if (this.oauthService.hasValidAccessToken()) {
+    if (this.oauthService.hasValidIdToken()) {
       this.app.getRootNavs()[0].setRoot('HomePage');
     }
 

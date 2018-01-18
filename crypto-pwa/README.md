@@ -1,8 +1,8 @@
-# cryptoPWA with Okta Authentication
+# Cryptocurrency PWA with Okta for Authentication and Storage
 
-This example shows to create an cryptocurrency application in Ionic that uses Okta for authentication. The cryptoPWA app used in this example was originally by [Josh Morony](https://twitter.com/joshuamorony) in [Building a Cryptocurrency Price Tracker PWA in Ionic](https://www.joshmorony.com/building-a-cryptocurrency-price-tracker-pwa-in-ionic/).
+This example shows to create an cryptocurrency application in Ionic that uses Okta for authentication. The cryptoPWA app used in this example was originally by [Josh Morony](https://twitter.com/joshuamorony) in [Building a Cryptocurrency Price Tracker PWA in Ionic](https://www.joshmorony.com/building-a-cryptocurrency-price-tracker-pwa-in-ionic/). You can see it online at <https://cryptopwa.com>.
 
-Please read [Protect your Cryptocurrency Wealth Tracking PWA with Okta]() to see how this application was created.
+Please read [Protect your Cryptocurrency Wealth Tracking PWA with Okta](https://developer.okta.com/blog/2018/01/16/cryptocurrency-pwa-secured-by-okta) to see how this application was created.
 
 **Prerequisites:** [Node.js](https://nodejs.org/).
 
@@ -25,7 +25,7 @@ cd okta-ionic-crypto-pwa
 This will get a copy of the project installed locally. Then run the following command to install Ionic and Cordova.
 
 ```
-npm install -g cordova ionic
+npm install -g ionic
 ```
 
 Then run the application:
@@ -46,13 +46,17 @@ To integrate Okta's Identity Platform for user authentication, you'll first need
 After performing these steps, copy the `clientId` into `src/pages/login/login.ts` and change `{yourOktaDomain}` to match your account's id.
 
 ```typescript
-constructor(private navCtrl: NavController, private oauthService: OAuthService) {
-  oauthService.redirectUri = 'http://localhost:8100';
+constructor(private oauthService: OAuthService, private app: App) {
+  if (this.oauthService.hasValidIdToken()) {
+    this.app.getRootNavs()[0].setRoot('HomePage');
+  }
+
+  oauthService.redirectUri = window.location.origin;
   oauthService.clientId = '{clientId}';
   oauthService.scope = 'openid profile email';
-  oauthService.issuer = 'https://{youtOktaDomain}.com/oauth2/default';
+  oauthService.issuer = 'https://{yourOktaDomain}/oauth2/default';
   oauthService.tokenValidationHandler = new JwksValidationHandler();
-  ...
+  oauthService.loadDiscoveryDocumentAndTryLogin();
 }
 ```
 
@@ -62,13 +66,13 @@ Your OIDC app should have settings like the following:
 
 ## Links
 
-This example uses the following libraries provided by Okta:
-
-* [Okta Auth SDK](https://github.com/okta/okta-auth-js)
-
-It also uses the following library provided by [Manfred Steyer](https://github.com/manfredsteyer):
+This example uses the following library provided by [Manfred Steyer](https://github.com/manfredsteyer):
 
 * [angular-oauth2-oidc](https://github.com/manfredsteyer/angular-oauth2-oidc)
+
+This example leverages the following app provided by [Josh Morony](https://github.com/joshuamorony):
+
+* [ionic-crypto-pwa](https://github.com/joshuamorony/ionic-crypto-pwa)
 
 ## Help
 
