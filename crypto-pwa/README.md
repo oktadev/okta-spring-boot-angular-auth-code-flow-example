@@ -1,8 +1,8 @@
-# Cryptocurrency PWA with Okta for Authentication and Storage
+# Cryptocurrency PWA with Okta Authentication
 
 This example shows to create an cryptocurrency application in Ionic that uses Okta for authentication. The cryptoPWA app used in this example was originally by [Josh Morony](https://twitter.com/joshuamorony) in [Building a Cryptocurrency Price Tracker PWA in Ionic](https://www.joshmorony.com/building-a-cryptocurrency-price-tracker-pwa-in-ionic/). You can see it online at <https://cryptopwa.com>.
 
-Please read [Protect your Cryptocurrency Wealth Tracking PWA with Okta](https://developer.okta.com/blog/2018/01/16/cryptocurrency-pwa-secured-by-okta) to see how this application was created.
+Please read [Protect your Cryptocurrency Wealth Tracking PWA with Okta](https://developer.okta.com/blog/2018/01/18/cryptocurrency-pwa-secured-by-okta) to see how this application was created.
 
 **Prerequisites:** [Node.js](https://nodejs.org/).
 
@@ -22,7 +22,7 @@ git clone git@github.com:oktadeveloper/okta-ionic-crypto-pwa.git
 cd okta-ionic-crypto-pwa
 ```
 
-This will get a copy of the project installed locally. Then run the following command to install Ionic and Cordova.
+This will get a copy of the project installed locally. Then run the following command to install Ionic.
 
 ```
 npm install -g ionic
@@ -41,7 +41,7 @@ To integrate Okta's Identity Platform for user authentication, you'll first need
 * Log in to your Okta account and navigate to **Applications > Add Application** 
 * Select **SPA** and click **Next**
 * Give your application a name (e.g. "Crypto PWA")
-* Change the **Base URI** and **Login redirect URI** to `http://localhost:8100` and click **Done**. 
+* Change the **Base URI**, **Login redirect URI**, and **Logout redirect URI** to `http://localhost:8100` and click **Done**. 
 
 After performing these steps, copy the `clientId` into `src/pages/login/login.ts` and change `{yourOktaDomain}` to match your account's id.
 
@@ -76,7 +76,7 @@ This example leverages the following app provided by [Josh Morony](https://githu
 
 ## Help
 
-Please post any questions as comments on the [blog post](), or visit our [Okta Developer Forums](https://devforum.okta.com/). You can also email developers@okta.com if would like to create a support ticket.
+Please post any questions as comments on the [blog post](https://developer.okta.com/blog/2018/01/18/cryptocurrency-pwa-secured-by-okta), or visit our [Okta Developer Forums](https://devforum.okta.com/). You can also email developers@okta.com if would like to create a support ticket.
 
 ## License
 

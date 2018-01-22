@@ -44,13 +44,13 @@ export class HoldingsProvider {
   }
 
   saveHoldings(): void {
-    this.http.post(this.HOLDINGS_API, this.holdings,{headers: this.getHeaders()}).subscribe(data => {
+    this.http.post(this.HOLDINGS_API, this.holdings, {headers: this.getHeaders()}).subscribe(data => {
       console.log('holdings', data);
     }, this.onError);
   }
 
   loadHoldings(): void {
-    this.http.get(this.HOLDINGS_API,{headers: this.getHeaders()}).subscribe((holdings: Holding[]) => {
+    this.http.get(this.HOLDINGS_API, {headers: this.getHeaders()}).subscribe((holdings: Holding[]) => {
       if (holdings !== null) {
         this.holdings = holdings;
         this.fetchPrices();
