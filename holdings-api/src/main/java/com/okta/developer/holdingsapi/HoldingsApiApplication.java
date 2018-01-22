@@ -5,29 +5,19 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.Ordered;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
-import java.security.Principal;
-import java.util.Arrays;
 import java.util.Collections;
 
 @EnableResourceServer
-@RestController
 @SpringBootApplication
 public class HoldingsApiApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(HoldingsApiApplication.class, args);
-	}
-
-    @GetMapping("/hello-oauth")
-    public String sayHello(Principal principal) {
-        return "Hello, " + principal.getName();
+    public static void main(String[] args) {
+        SpringApplication.run(HoldingsApiApplication.class, args);
     }
 
     @Bean

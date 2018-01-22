@@ -17,7 +17,7 @@ export class LoginPage {
     }
 
     oauthService.redirectUri = window.location.origin;
-    oauthService.clientId = '0oadlhydkusIOtfg90h7';
+    oauthService.clientId = '0oadm6f31vyNMn6gf0h7';
     oauthService.scope = 'openid profile email';
     oauthService.issuer = 'https://dev-158606.oktapreview.com/oauth2/default';
     oauthService.tokenValidationHandler = new JwksValidationHandler();
