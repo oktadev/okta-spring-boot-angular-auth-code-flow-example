@@ -5,6 +5,8 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.okta.sdk.client.Client;
 import com.okta.sdk.resource.user.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -14,6 +16,7 @@ import java.util.*;
 @RestController
 @RequestMapping("/api/holdings")
 public class HoldingsController {
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final ObjectMapper mapper = new ObjectMapper();
     private final Client client;
     private final String HOLDINGS_ATTRIBUTE_NAME = "holdings";
@@ -31,10 +34,9 @@ public class HoldingsController {
 
         if (holdingsFromOkta != null) {
             try {
-                holdings = mapper.readValue(holdingsFromOkta, new TypeReference<List<Holding>>() {
-                });
+                holdings = mapper.readValue(holdingsFromOkta, new TypeReference<List<Holding>>() {});
             } catch (IOException io) {
-                System.err.println(("Error marshalling Okta custom data: " + io.getMessage()));
+                logger.error("Error marshalling Okta custom data: " + io.getMessage());
                 io.printStackTrace();
             }
         }
@@ -50,7 +52,7 @@ public class HoldingsController {
             user.getProfile().put(HOLDINGS_ATTRIBUTE_NAME, json);
             user.update();
         } catch (JsonProcessingException e) {
-            System.err.println(("Error saving Okta custom data: " + e.getMessage()));
+            logger.error("Error saving Okta custom data: " + e.getMessage());
             e.printStackTrace();
         }
         return holdings;

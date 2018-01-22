@@ -1,4 +1,4 @@
-package com.okta.developer.crypto;
+package com.okta.developer.holdingsapi;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -7,7 +7,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class CryptoApplicationTests {
+public class HoldingsApiApplicationTests {
 
 	@Test
 	public void contextLoads() {

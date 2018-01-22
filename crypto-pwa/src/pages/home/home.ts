@@ -10,11 +10,12 @@ import { OAuthService } from 'angular-oauth2-oidc';
 })
 export class HomePage {
 
-  constructor(private navCtrl: NavController, private holdingsProvider: HoldingsProvider, private oauthService: OAuthService) {
+  constructor(private navCtrl: NavController, private holdingsProvider: HoldingsProvider,
+              private oauthService: OAuthService) {
   }
 
   ionViewDidLoad(): void {
-    if (!this.oauthService.hasValidAccessToken()) {
+    if (!this.oauthService.hasValidIdToken()) {
       this.navCtrl.push('LoginPage');
     }
     this.holdingsProvider.loadHoldings();
@@ -32,15 +33,15 @@ export class HomePage {
     this.holdingsProvider.fetchPrices(refresher);
   }
 
-  logout() {
-    this.oauthService.logOut();
-  }
-
   get name() {
     const claims: any = this.oauthService.getIdentityClaims();
     if (!claims) {
       return null;
     }
     return claims.name;
+  }
+
+  logout() {
+    this.oauthService.logOut();
   }
 }
