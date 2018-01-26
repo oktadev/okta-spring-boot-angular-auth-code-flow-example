@@ -2,7 +2,7 @@
  
 This example app shows how to use Okta's Java SDK to store cryptocurrency holdings as a custom user attribute.
 
-Please read [Localstorage Sucks! Use Okta to Store Your User's Data!]() to see how this app was created.
+Please read [Use Okta (Instead of Local Storage) to Store Your User's Data Securely](https://developer.okta.com/blog/2018/01/23/replace-local-storage-with-okta-profile-attributes) to see how this app was created.
 
 **Prerequisites:** [Java 8](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html) and [Node.js](https://nodejs.org/).
 
@@ -36,21 +36,34 @@ To run the client, cd into the `crypto-pwa` folder and run:
 yarn && yarn start
 ```
 
-### Create an OIDC App in Okta
+### Setup Okta
 
-You will need to [create an OIDC App in Okta](https://developer.okta.com/blog/2017/12/06/bootiful-development-with-spring-boot-and-react#create-an-oidc-app-in-okta) to get your values to perform authentication. 
+The first thing you’ll need to do is add a `holdings` attribute to your organization’s user profiles. Log in to the Okta Developer Console, then navigate to **Users** > **Profile Editor**. Click on **Profile** for the first profile in the table. You can identify it by its Okta logo. Click **Add Attribute** and use the following values:
 
-Log in to your Okta Developer account (or [sign up](https://developer.okta.com/signup/) if you don’t have an account) and navigate to **Applications** > **Add Application**. Click **Single-Page App**, click **Next**, and give the app a name you’ll remember. Change all instances of `localhost:8080` to `localhost:3000` and click **Done**.
+* Display name: `Holdings`
+* Variable name: `holdings`
+* Description: `Cryptocurrency Holdings`
+
+You will need to [create an API Token and OIDC App](https://developer.okta.com/blog/2018/01/23/replace-local-storage-with-okta-profile-attributes#create-an-api-token) to get your values to perform authentication. 
+
+Log in to your Okta Developer account (or [sign up](https://developer.okta.com/signup/) if you don’t have an account) and navigate to **Applications** > **Add Application**. Click **Single-Page App**, click **Next**, and give the app a name you’ll remember. Click **Done**.
+
+For the Okta Java SDK to talk to Okta’s API, you’ll need to create an API token. The abbreviated steps are as follows:
+
+1. Log in to your Developer Console
+2. Navigate to **API** > **Tokens** and click **Create Token**
+3. Give your token a name, then copy its value
 
 #### Server Configuration
 
-Set the `issuer` and copy the `clientId` into `holdings-api/src/main/resources/application.properties`. 
+Open `holdings-api/src/main/resources/application.properties` and add your API token as a property. While you're there, set the `issuer` and `clientId` to match your OIDC application.
 
 **NOTE:** The value of `{yourOktaDomain}` should be something like `dev-123456.oktapreview.com`. Make sure you don't include `-admin` in the value!
 
 ```properties
 okta.oauth2.issuer=https://{yourOktaDomain}.com/oauth2/default
-okta.oauth2.clientId={clientId}
+okta.oauth2.clientId={yourClientId}
+okta.client.token=XXX
 ```
 
 #### Client Configuration
@@ -74,7 +87,7 @@ This example uses the following libraries provided by Okta:
 
 ## Help
 
-Please post any questions as comments on the [blog post](), or visit our [Okta Developer Forums](https://devforum.okta.com/). You can also email developers@okta.com if would like to create a support ticket.
+Please post any questions as comments on the [blog post](https://developer.okta.com/blog/2018/01/23/replace-local-storage-with-okta-profile-attributes), or visit our [Okta Developer Forums](https://devforum.okta.com/). You can also email developers@okta.com if would like to create a support ticket.
 
 ## License
 
