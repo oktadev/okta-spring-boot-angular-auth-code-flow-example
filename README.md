@@ -33,6 +33,7 @@ To run the server, cd into the `holdings-api` folder and run:
 To run the client, cd into the `crypto-pwa` folder and run:
  
 ```bash
+npm install -g ionic
 npm i && ionic serve
 ```
 
