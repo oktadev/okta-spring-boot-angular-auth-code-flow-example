@@ -33,7 +33,7 @@ To run the server, cd into the `holdings-api` folder and run:
 To run the client, cd into the `crypto-pwa` folder and run:
  
 ```bash
-yarn && yarn start
+npm i && ionic serve
 ```
 
 ### Setup Okta
