@@ -1,9 +1,10 @@
 package com.okta.developer.its;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.WireMockServer;
+import com.github.tomakehurst.wiremock.client.WireMock;
+import com.okta.developer.holdingsapi.Holding;
 import com.okta.developer.holdingsapi.HoldingsApiApplication;
-import com.okta.developer.holdingsapi.HoldingsController;
-import com.okta.sdk.client.Client;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,33 +14,44 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
+import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.support.TestPropertySourceUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.util.SocketUtils;
+import org.springframework.util.StreamUtils;
+import org.springframework.web.context.WebApplicationContext;
+
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
-import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
+
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.securityContext;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
 @ContextConfiguration(initializers = HoldingsApiIT.RandomPortInitializer.class)
-@SpringBootTest(classes = {HoldingsApiApplication.class},
+@SpringBootTest(classes = {HoldingsApiIT.TestResourceServerConfiguration.class, HoldingsApiApplication.class},
                 webEnvironment = RANDOM_PORT,
                 properties = {
                     "okta.client.token=FAKE_TEST_TOKEN"})
 public class HoldingsApiIT {
+
+    private final static String TEST_USER_ID = "user-id-123";
 
     private WireMockServer wireMockServer;
 
@@ -47,45 +59,86 @@ public class HoldingsApiIT {
     private int mockServerPort;
 
     @Autowired
-    private HoldingsController holdingsController;
-
-    @Autowired
-    private Client client;
+    private WebApplicationContext webApplicationContext;
 
     @Test
-    @WithMockUser(username="user-id-123")
-    public void foo() throws Exception {
+    @WithMockUser(username=TEST_USER_ID)
+    public void testGetHoldings() throws Exception {
 
-        SecurityContext context = SecurityContextHolder.getContext();
+        SecurityContext securityContext = SecurityContextHolder.getContext();
 
-        MockMvc mockMvc = MockMvcBuilders.standaloneSetup(holdingsController).build();
+        MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
+                .apply(SecurityMockMvcConfigurers.springSecurity())
+                .build();
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/holdings")
+                .accept(MediaType.APPLICATION_JSON)
+                .with(securityContext(securityContext)))
+                .andExpect(status().is(200))
+
+                .andExpect(jsonPath("$[0].amount").value("amount-1"))
+                .andExpect(jsonPath("$[0].amount").value("amount-1"))
+                .andExpect(jsonPath("$[0].amount").value("amount-1"))
+
+                .andExpect(jsonPath("$[1].amount").value("amount-2"))
+                .andExpect(jsonPath("$[1].amount").value("amount-2"))
+                .andExpect(jsonPath("$[1].amount").value("amount-2"));
+    }
+
+    @Test
+    @WithMockUser(username=TEST_USER_ID)
+    public void testPostHoldings() throws Exception {
+
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+
+        MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
+                .apply(SecurityMockMvcConfigurers.springSecurity())
+                .build();
+
+        Holding[] holdings = {
+                new Holding()
+                    .setCrypto("crypto-1")
+                    .setCurrency("currency-1")
+                    .setAmount("amount-1"),
+                new Holding()
+                    .setCrypto("crypto-2")
+                    .setCurrency("currency-2")
+                    .setAmount("amount-2")
+        };
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/holdings")
                 .contentType(MediaType.APPLICATION_JSON)
-                .with(user("user-id-123"))
-                .with(securityContext(context)))
-                .andExpect(MockMvcResultMatchers.status().is(200))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].amount").value("amount-1"));
+                .accept(MediaType.APPLICATION_JSON)
+                .with(securityContext(securityContext))
+                .content(new ObjectMapper().writeValueAsString(holdings)))
 
-//        Holding[] result = restTemplate.getForObject("/api/holdings", Holding[].class);
+                .andExpect(status().is(200))
 
+                .andExpect(jsonPath("$[0].amount").value("amount-1"))
+                .andExpect(jsonPath("$[0].amount").value("amount-1"))
+                .andExpect(jsonPath("$[0].amount").value("amount-1"))
 
+                .andExpect(jsonPath("$[1].amount").value("amount-2"))
+                .andExpect(jsonPath("$[1].amount").value("amount-2"))
+                .andExpect(jsonPath("$[1].amount").value("amount-2"));
     }
 
     @Before
-    public void startMockServer() {
+    public void startMockServer() throws IOException {
         wireMockServer = new WireMockServer(wireMockConfig().port(mockServerPort));
         configureWireMock(wireMockServer);
         wireMockServer.start();
     }
 
-    private void configureWireMock(WireMockServer wireMockServer) {
+    private void configureWireMock(WireMockServer wireMockServer) throws IOException {
 
-        String userId = "user-id-123";
-        wireMockServer.stubFor(get("/api/v1/users/" + userId)
-                .willReturn(aResponse()
-                    .withStatus(200)
-                    .withBody("{id='user-id-123'}")));
+        String body = StreamUtils.copyToString(getClass().getResourceAsStream("/its/user.json"), StandardCharsets.UTF_8);
+
+        wireMockServer.stubFor(WireMock.get("/api/v1/users/" + TEST_USER_ID)
+                .willReturn(aResponse().withBody(body)));
+
+        wireMockServer.stubFor(WireMock.put("/api/v1/users/" + TEST_USER_ID)
+                .willReturn(aResponse().withBody(body)));
     }
 
     @After
@@ -102,7 +155,15 @@ public class HoldingsApiIT {
             int randomPort = SocketUtils.findAvailableTcpPort();
             TestPropertySourceUtils.addInlinedPropertiesToEnvironment(applicationContext,
                     "wiremock.server.port=" + randomPort,
-                    "okta.client.orgUrl=https://localhost:" + randomPort);
+                    "okta.client.orgUrl=http://localhost:" + randomPort);
+        }
+    }
+
+    public static class TestResourceServerConfiguration extends ResourceServerConfigurerAdapter {
+
+        @Override
+        public void configure(ResourceServerSecurityConfigurer security) {
+            security.stateless(false);
         }
     }
 }
