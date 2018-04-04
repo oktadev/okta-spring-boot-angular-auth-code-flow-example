@@ -7,6 +7,8 @@ import com.okta.sdk.client.Client;
 import com.okta.sdk.resource.user.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -19,7 +21,7 @@ public class HoldingsController {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final ObjectMapper mapper = new ObjectMapper();
     private final Client client;
-    private final String HOLDINGS_ATTRIBUTE_NAME = "holdings";
+    private static final String HOLDINGS_ATTRIBUTE_NAME = "holdings";
 
     public HoldingsController(Client client) {
         this.client = client;
@@ -27,6 +29,7 @@ public class HoldingsController {
 
     @GetMapping
     public List<Holding> getHoldings(Principal principal) {
+
         User user = client.getUser(principal.getName());
 
         String holdingsFromOkta = (String) user.getProfile().get(HOLDINGS_ATTRIBUTE_NAME);
