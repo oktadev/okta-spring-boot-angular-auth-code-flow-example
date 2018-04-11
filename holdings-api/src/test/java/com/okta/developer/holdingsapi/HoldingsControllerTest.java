@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.okta.sdk.client.Client;
 import com.okta.sdk.resource.user.User;
 import com.okta.sdk.resource.user.UserProfile;
-import org.hamcrest.Matcher;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 
@@ -13,14 +12,17 @@ import java.io.IOException;
 import java.security.Principal;
 import java.util.List;
 
-import static com.spotify.hamcrest.jackson.JsonMatchers.jsonText;
-import static org.hamcrest.Matchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
-
 import static org.hamcrest.Matchers.contains;
-import static org.mockito.Mockito.*;
+import static org.hamcrest.Matchers.is;
+
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.eq;
 
 import static com.spotify.hamcrest.pojo.IsPojo.pojo;
+import static com.spotify.hamcrest.jackson.JsonMatchers.jsonText;
 import static com.spotify.hamcrest.jackson.JsonMatchers.jsonObject;
 import static com.spotify.hamcrest.jackson.IsJsonArray.jsonArray;
 
@@ -30,26 +32,23 @@ public class HoldingsControllerTest {
     @Test
     public void getHoldingsTest() {
 
-        // mock the principal
         String username = "joe.coder@example.com";
-        Principal principal = mock(Principal.class);
-        when(principal.getName()).thenReturn(username);
 
-        // mock the UserProfile
+        // define mocks
+        Client client = mock(Client.class);
+        User user = mock(User.class);
         UserProfile userProfile = mock(UserProfile.class);
+        Principal principal = mock(Principal.class);
+
+        // stub behaviour
+        when(principal.getName()).thenReturn(username);
+        when(client.getUser(username)).thenReturn(user);
+        when(user.getProfile()).thenReturn(userProfile);
         when(userProfile.get("holdings")).thenReturn(
             "[" +
                 "{\"crypto\": \"crypto-value1\", \"currency\": \"currency-value1\", \"amount\": \"amount-value1\"}," +
                 "{\"crypto\": \"crypto-value2\", \"currency\": \"currency-value2\", \"amount\": \"amount-value2\"}" +
             "]");
-
-        // mock the User
-        User user = mock(User.class);
-        when(user.getProfile()).thenReturn(userProfile);
-
-        // mock the Okta SDK client
-        Client client = mock(Client.class);
-        when(client.getUser(username)).thenReturn(user);
 
         // test the controller
         HoldingsController holdingsController = new HoldingsController(client);
@@ -70,6 +69,19 @@ public class HoldingsControllerTest {
     @Test
     public void saveHoldingsTest() throws IOException {
 
+        // define mocks
+        Client client = mock(Client.class);
+        User user = mock(User.class);
+        UserProfile userProfile = mock(UserProfile.class);
+        Principal principal = mock(Principal.class);
+
+        // define behaviour
+        String username = "joe.coder@example.com";
+        when(principal.getName()).thenReturn(username);
+        when(client.getUser(username)).thenReturn(user);
+        when(user.getProfile()).thenReturn(userProfile);
+
+        // test the controller
         Holding[] inputHoldings = new Holding[] {
                 new Holding()
                     .setCrypto("crypto1")
@@ -81,23 +93,6 @@ public class HoldingsControllerTest {
                     .setAmount("amount2")
         };
 
-        // mock the principal
-        String username = "joe.coder@example.com";
-        Principal principal = mock(Principal.class);
-        when(principal.getName()).thenReturn(username);
-
-        // mock the UserProfile
-        UserProfile userProfile = mock(UserProfile.class);
-
-        // mock the User
-        User user = mock(User.class);
-        when(user.getProfile()).thenReturn(userProfile);
-
-        // mock the Okta SDK client
-        Client client = mock(Client.class);
-        when(client.getUser(username)).thenReturn(user);
-
-        // test the controller
         HoldingsController holdingsController = new HoldingsController(client);
         Holding[] outputHoldings = holdingsController.saveHoldings(inputHoldings, principal);
 
