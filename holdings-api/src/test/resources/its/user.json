@@ -5,7 +5,7 @@
     "lastName": "Coder",
     "email": "Joe.Coder@example.com",
     "login": "Joe.Coder@example.com",
-    "holdings": "[{\"amount\": \"amount-1\", \"currency\": \"currency-1\", \"amount\":\"amount-1\"}, {\"amount\": \"amount-2\", \"currency\": \"currency-2\", \"amount\":\"amount-2\"}]"
+    "holdings": "[{\"amount\": \"amount-1\", \"currency\": \"currency-1\", \"crypto\":\"crypto-1\"}, {\"amount\": \"amount-2\", \"currency\": \"currency-2\", \"crypto\":\"crypto-2\"}]"
   },
   "_links": {
     "self": {
