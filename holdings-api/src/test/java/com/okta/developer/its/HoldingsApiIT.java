@@ -45,10 +45,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(SpringRunner.class)
 @ContextConfiguration(initializers = HoldingsApiIT.RandomPortInitializer.class)
-@SpringBootTest(classes = {HoldingsApiIT.TestResourceServerConfiguration.class, HoldingsApiApplication.class},
+@SpringBootTest(classes = {
+                    HoldingsApiIT.TestResourceServerConfiguration.class,
+                    HoldingsApiApplication.class
+                },
                 webEnvironment = RANDOM_PORT,
                 properties = {
-                    "okta.client.token=FAKE_TEST_TOKEN"})
+                    "okta.client.token=FAKE_TEST_TOKEN",
+                    "okta.client.orgUrl=http://localhost:${wiremock.server.port}",
+                })
 public class HoldingsApiIT {
 
     private final static String TEST_USER_ID = "user-id-123";
@@ -65,31 +70,27 @@ public class HoldingsApiIT {
     @WithMockUser(username=TEST_USER_ID)
     public void testGetHoldings() throws Exception {
 
-        SecurityContext securityContext = SecurityContextHolder.getContext();
-
         MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
                 .apply(SecurityMockMvcConfigurers.springSecurity())
                 .build();
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/holdings")
                 .accept(MediaType.APPLICATION_JSON)
-                .with(securityContext(securityContext)))
+                .with(securityContext(SecurityContextHolder.getContext())))
                 .andExpect(status().is(200))
 
                 .andExpect(jsonPath("$[0].amount").value("amount-1"))
-                .andExpect(jsonPath("$[0].amount").value("amount-1"))
-                .andExpect(jsonPath("$[0].amount").value("amount-1"))
+                .andExpect(jsonPath("$[0].crypto").value("crypto-1"))
+                .andExpect(jsonPath("$[0].currency").value("currency-1"))
 
                 .andExpect(jsonPath("$[1].amount").value("amount-2"))
-                .andExpect(jsonPath("$[1].amount").value("amount-2"))
-                .andExpect(jsonPath("$[1].amount").value("amount-2"));
+                .andExpect(jsonPath("$[1].crypto").value("crypto-2"))
+                .andExpect(jsonPath("$[1].currency").value("currency-2"));
     }
 
     @Test
     @WithMockUser(username=TEST_USER_ID)
     public void testPostHoldings() throws Exception {
-
-        SecurityContext securityContext = SecurityContextHolder.getContext();
 
         MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
                 .apply(SecurityMockMvcConfigurers.springSecurity())
@@ -109,29 +110,25 @@ public class HoldingsApiIT {
         mockMvc.perform(MockMvcRequestBuilders.post("/api/holdings")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .with(securityContext(securityContext))
+                .with(securityContext(SecurityContextHolder.getContext()))
                 .content(new ObjectMapper().writeValueAsString(holdings)))
 
                 .andExpect(status().is(200))
 
                 .andExpect(jsonPath("$[0].amount").value("amount-1"))
-                .andExpect(jsonPath("$[0].amount").value("amount-1"))
-                .andExpect(jsonPath("$[0].amount").value("amount-1"))
+                .andExpect(jsonPath("$[0].crypto").value("crypto-1"))
+                .andExpect(jsonPath("$[0].currency").value("currency-1"))
 
                 .andExpect(jsonPath("$[1].amount").value("amount-2"))
-                .andExpect(jsonPath("$[1].amount").value("amount-2"))
-                .andExpect(jsonPath("$[1].amount").value("amount-2"));
+                .andExpect(jsonPath("$[1].crypto").value("crypto-2"))
+                .andExpect(jsonPath("$[1].currency").value("currency-2"));
     }
 
     @Before
     public void startMockServer() throws IOException {
         wireMockServer = new WireMockServer(wireMockConfig().port(mockServerPort));
-        configureWireMock(wireMockServer);
-        wireMockServer.start();
-    }
 
-    private void configureWireMock(WireMockServer wireMockServer) throws IOException {
-
+        // load a JSON file from the classpath
         String body = StreamUtils.copyToString(getClass().getResourceAsStream("/its/user.json"), StandardCharsets.UTF_8);
 
         wireMockServer.stubFor(WireMock.get("/api/v1/users/" + TEST_USER_ID)
@@ -139,6 +136,8 @@ public class HoldingsApiIT {
 
         wireMockServer.stubFor(WireMock.put("/api/v1/users/" + TEST_USER_ID)
                 .willReturn(aResponse().withBody(body)));
+
+        wireMockServer.start();
     }
 
     @After
@@ -154,8 +153,8 @@ public class HoldingsApiIT {
         public void initialize(ConfigurableApplicationContext applicationContext) {
             int randomPort = SocketUtils.findAvailableTcpPort();
             TestPropertySourceUtils.addInlinedPropertiesToEnvironment(applicationContext,
-                    "wiremock.server.port=" + randomPort,
-                    "okta.client.orgUrl=http://localhost:" + randomPort);
+                    "wiremock.server.port=" + randomPort
+            );
         }
     }
 
