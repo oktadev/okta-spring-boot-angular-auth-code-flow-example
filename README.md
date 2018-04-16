@@ -18,7 +18,7 @@ Please read [Use Okta (Instead of Local Storage) to Store Your User's Data Secur
 To install this example application, run the following commands:
 
 ```bash
-git clone git@github.com:oktadeveloper/okta-ionic-crypto-java-sdk.git
+git clone https://github.com/oktadeveloper/okta-ionic-crypto-java-sdk.git
 cd okta-ionic-crypto-java-sdk
 ```
 
