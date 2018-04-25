@@ -45,7 +45,8 @@
     </ion-item-sliding>
   </ion-list>
 
-  <button ion-button (click)="logout()">Logout</button>
+  <!-- note: need to run build after adding id=logout -->
+  <button ion-button (click)="logout()" id="logout">Logout</button>
 </ion-content>
 
 <ion-footer padding>

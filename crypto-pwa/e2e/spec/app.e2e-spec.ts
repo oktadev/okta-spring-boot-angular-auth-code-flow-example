@@ -1,5 +1,5 @@
 import { Page } from '../pages/app.po';
-import { browser, protractor } from 'protractor';
+import { browser, protractor, ExpectedConditions as ec } from 'protractor';
 
 describe('App', () => {
   let page: Page;
@@ -14,8 +14,7 @@ describe('App', () => {
     });
 
     it('should redirect to login', () => {
-      const EC = protractor.ExpectedConditions;
-      browser.wait(EC.urlContains('/#/login'), 5000);
+      browser.wait(ec.urlContains('/#/login'), 5000);
     });
 
     it('should have the correct title', () => {
