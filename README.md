@@ -1,4 +1,4 @@
-# Crypto PWA with Holdings Data in Okta
+# Cryptocurrency PWA with Holdings Data in Okta
  
 This example app shows how to use Okta's Java SDK to store cryptocurrency holdings as a custom user attribute.
 
