@@ -35,9 +35,7 @@ describe('Login', () => {
     const welcome = /Welcome/; // Use /Welcome, First Last/ if you want to verify full name
     const success = element.all(by.css('h1')).first();
     browser.wait(ec.visibilityOf(success), 5000).then(() => {
-      success.getText().then((value) => {
-        expect(value).toMatch(welcome);
-      });
+      expect(success.getText()).toMatch(welcome);
     });
   });
 
