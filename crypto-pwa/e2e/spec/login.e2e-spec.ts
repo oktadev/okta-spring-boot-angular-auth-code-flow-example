@@ -16,7 +16,7 @@ describe('Login', () => {
     expect(loginPage.loginButton.isPresent());
   });
 
-  it('should fail to login with bad password', () => {
+  it('should fail to log in with bad password', () => {
     loginPage.clickLoginButton();
     loginPage.login('admin', 'foo');
     const error = element.all(by.css('.infobox-error')).first();
@@ -25,7 +25,7 @@ describe('Login', () => {
     });
   });
 
-  it('should login successfully with demo account', () => {
+  it('should log in successfully with demo account', () => {
     loginPage.clearUserName();
     loginPage.setUserName(process.env.E2E_USERNAME);
     loginPage.clearPassword();
@@ -39,7 +39,7 @@ describe('Login', () => {
     });
   });
 
-  it('should logout successfully', () => {
+  it('should log out successfully', () => {
     loginPage.logout();
     browser.wait(ec.urlContains('/#/login'), 2000);
     expect(loginPage.loginButton.isPresent());
