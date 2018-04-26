@@ -1,6 +1,4 @@
 const { SpecReporter } = require('jasmine-spec-reporter');
-const serve = require('serve');
-let server;
 
 exports.config = {
   allScriptsTimeout: 11000,
@@ -22,10 +20,7 @@ exports.config = {
     require('ts-node').register({
       project: 'e2e/tsconfig.e2e.json'
     });
-    server = serve('www', {port: 8100});
+    require('serve').serve('www', {port: 8100});
     jasmine.getEnv().addReporter(new SpecReporter({ spec: { displayStacktrace: true } }));
-  },
-  onComplete() {
-    server.stop();
   }
 };
