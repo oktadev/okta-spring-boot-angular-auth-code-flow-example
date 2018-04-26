@@ -26,9 +26,9 @@ before_install:
   - npm install -g ionic@3.20.0
 script:
   - chmod +x holdings-api/mvnw
-  - cd holdings-api && ./mvnw clean test
-  - cd ../crypto-pwa && npm test
-  - cd ../holdings-api/mvnw spring-boot:run &
+  - cd holdings-api && ./mvnw -q clean test
+  - cd ../crypto-pwa && npm i && npm test
+  - cd ../holdings-api/mvnw -q spring-boot:run &
   - cd ../crypto-pwa && npm run build --prod
   - npm run e2e
 notifications:
