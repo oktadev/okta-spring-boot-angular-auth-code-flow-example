@@ -9,24 +9,27 @@ public class Holding {
         return crypto;
     }
 
-    public void setCrypto(String crypto) {
+    public Holding setCrypto(String crypto) {
         this.crypto = crypto;
+        return this;
     }
 
     public String getCurrency() {
         return currency;
     }
 
-    public void setCurrency(String currency) {
+    public Holding setCurrency(String currency) {
         this.currency = currency;
+        return this;
     }
 
     public String getAmount() {
         return amount;
     }
 
-    public void setAmount(String amount) {
+    public Holding setAmount(String amount) {
         this.amount = amount;
+        return this;
     }
 
     @Override
