@@ -2,7 +2,7 @@
  
 This example app shows how to use Okta's Java SDK to store cryptocurrency holdings as a custom user attribute.
 
-Please read [Use Okta (Instead of Local Storage) to Store Your User's Data Securely](https://developer.okta.com/blog/2018/01/23/replace-local-storage-with-okta-profile-attributes) to see how this app was created.
+Please read [Use Okta (Instead of Local Storage) to Store Your User's Data Securely](https://developer.okta.com/blog/2018/01/23/replace-local-storage-with-okta-profile-attributes) to see how this app was created. To see how it's tested, see [The Hitchhiker's Guide to Testing Spring Boot APIs and Angular Components with WireMock, Jest, Protractor, and Travis CI](https://developer.okta.com/blog/2018/05/02/testing-spring-boot-angular-components).
 
 **Prerequisites:** [Java 8](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html) and [Node.js](https://nodejs.org/).
 
