@@ -24,8 +24,8 @@ Please read [The Hitchhiker's Guide to Testing Spring Boot APIs and Angular Comp
 To install this example application, run the following commands:
 
 ```bash
-git clone https://github.com/oktadeveloper/okta-ionic-crypto-java-sdk.git
-cd okta-ionic-crypto-java-sdk
+git clone https://github.com/oktadeveloper/okta-spring-boot-angular-auth-code-flow-example.git spring-rocks
+cd spring-rocks
 ```
 
 This will get a copy of the project installed locally. To install all of its dependencies and start each app, follow the instructions below.
