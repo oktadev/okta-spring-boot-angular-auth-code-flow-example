@@ -1,18 +1,18 @@
 import { IonicModule, NavController } from 'ionic-angular';
-import { OAuthService } from 'angular-oauth2-oidc';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { HomePage } from './home';
 import { HoldingsProvider } from '../../providers/holdings/holdings';
 import { By } from '@angular/platform-browser';
+import { UserProvider } from '../../providers/user/user';
+import { Observable } from 'rxjs/Rx';
 
 describe('HomePage', () => {
   let fixture: ComponentFixture<HomePage>;
   let component: HomePage;
-  let oauthService = {
-    hasValidIdToken() {
-      return true;
-    },
-    getIdentityClaims() {}
+  let userProvider = {
+    getUser() {
+      return Observable.of({name: "Cool User"});
+    }
   };
   let holdingsProvider = {
     holdings: [{crypto: 'BTC', currency: 'USD', amount: 5, value: '10000'}],
@@ -27,7 +27,7 @@ describe('HomePage', () => {
       declarations: [HomePage],
       imports: [IonicModule.forRoot(HomePage)],
       providers: [NavController,
-        {provide: OAuthService, useValue: oauthService},
+        {provide: UserProvider, useValue: userProvider},
         {provide: HoldingsProvider, useValue: holdingsProvider}
       ]
     });
@@ -37,7 +37,6 @@ describe('HomePage', () => {
     fixture = TestBed.createComponent(HomePage);
     component = fixture.componentInstance;
     loadHoldings = jest.spyOn(holdingsProvider, 'loadHoldings');
-    getIdentityClaims = jest.spyOn(oauthService, 'getIdentityClaims');
   });
 
   it('should be created', () => {
@@ -48,7 +47,6 @@ describe('HomePage', () => {
     component.ionViewDidLoad();
     fixture.detectChanges();
     expect(loadHoldings).toHaveBeenCalled();
-    expect(getIdentityClaims).toHaveBeenCalled();
   });
 
   // Test that passes when holdings is empty

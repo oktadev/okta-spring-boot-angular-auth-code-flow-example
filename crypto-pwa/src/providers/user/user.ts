@@ -12,6 +12,6 @@ export class UserProvider {
   }
 
   logout() {
-    this.http.post('/api/logout', {});
+    return this.http.post('/api/logout', {});
   }
 }

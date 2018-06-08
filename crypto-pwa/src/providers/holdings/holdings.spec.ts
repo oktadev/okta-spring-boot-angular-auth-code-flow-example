@@ -1,27 +1,16 @@
 import { getTestBed, TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { HoldingsProvider } from './holdings';
-import { OAuthService } from 'angular-oauth2-oidc';
 
 describe('HoldingsProvider', () => {
   let injector: TestBed;
   let provider: HoldingsProvider;
   let httpMock: HttpTestingController;
-  let oauthService = {
-    hasValidIdToken() {
-      return true;
-    },
-    authorizationHeader() {
-      return "random-string";
-    }
-  };
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
-      providers: [HoldingsProvider,
-        {provide: OAuthService, useValue: oauthService}
-      ]
+      providers: [HoldingsProvider]
     });
 
     injector = getTestBed();

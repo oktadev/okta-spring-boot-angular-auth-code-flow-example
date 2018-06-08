@@ -3,7 +3,9 @@ package com.okta.developer.holdingsapi;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
@@ -17,12 +19,20 @@ public class UserController {
     @SuppressWarnings("unchecked")
     public ResponseEntity<?> getUser(Principal principal) {
         if (principal == null) {
-            return new ResponseEntity<>("User not authenticated", HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("", HttpStatus.OK);
         }
-        OAuth2Authentication authentication = (OAuth2Authentication) principal;
-        // todo: figure out how to get user's info, the following works in JHipster
-        // maybe I need a custom security config?
-        Map<String, Object> details = (Map<String, Object>) authentication.getUserAuthentication().getDetails();
-        return ResponseEntity.ok().body(details);
+        if (principal instanceof OAuth2Authentication) {
+            OAuth2Authentication authentication = (OAuth2Authentication) principal;
+            Map<String, Object> details = (Map<String, Object>) authentication.getUserAuthentication().getDetails();
+            return ResponseEntity.ok().body(details);
+        } else {
+            return ResponseEntity.ok().body(principal.getName());
+        }
+
+    }
+
+    @PostMapping("/api/logout")
+    public void logout(HttpServletRequest request) {
+        request.getSession(false).invalidate();
     }
 }

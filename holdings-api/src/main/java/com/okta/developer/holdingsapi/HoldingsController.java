@@ -7,6 +7,7 @@ import com.okta.sdk.client.Client;
 import com.okta.sdk.resource.user.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -25,9 +26,20 @@ public class HoldingsController {
         this.client = client;
     }
 
+    @SuppressWarnings("unchecked")
+    private User getUser(Principal principal) {
+        if (principal instanceof OAuth2Authentication) {
+            OAuth2Authentication authentication = (OAuth2Authentication) principal;
+            Map<String, Object> details = (Map<String, Object>) authentication.getUserAuthentication().getDetails();
+            return client.getUser(details.get("sub").toString());
+        } else {
+            return client.getUser(principal.getName());
+        }
+    }
+
     @GetMapping
     public List<Holding> getHoldings(Principal principal) {
-        User user = client.getUser(principal.getName());
+        User user = getUser(principal);
 
         String holdingsFromOkta = (String) user.getProfile().get(HOLDINGS_ATTRIBUTE_NAME);
         List<Holding> holdings = new LinkedList<>();
@@ -46,7 +58,8 @@ public class HoldingsController {
 
     @PostMapping
     public Holding[] saveHoldings(@RequestBody Holding[] holdings, Principal principal) {
-        User user = client.getUser(principal.getName());
+        User user = getUser(principal);
+
         try {
             String json = mapper.writeValueAsString(holdings);
             user.getProfile().put(HOLDINGS_ATTRIBUTE_NAME, json);

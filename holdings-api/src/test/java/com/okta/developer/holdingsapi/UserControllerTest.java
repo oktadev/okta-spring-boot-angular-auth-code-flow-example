@@ -46,7 +46,9 @@ public class UserControllerTest {
     public void testNonAuthenticatedUser() throws Exception {
         restUserMockMvc.perform(get("/api/user")
                 .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isUnauthorized());
+                .andExpect(status().isOk())
+                .andExpect(content().string(""));
+
     }
 
     @Test
@@ -55,14 +57,13 @@ public class UserControllerTest {
                 .with(authentication(getAuthentication()))
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().string("test"));
+                .andExpect(content().string("mraible"));
     }
 
-    // From http://engineering.pivotal.io/post/faking_oauth_sso/
     private Authentication getAuthentication() {
         List<GrantedAuthority> authorities = AuthorityUtils.createAuthorityList("Everyone");
 
-        User userPrincipal = new User("user", "", true, true, true, true, authorities);
+        User userPrincipal = new User("mraible", "", true, true, true, true, authorities);
 
         HashMap<String, String> details = new HashMap<>();
         details.put("user_name", "mraible");

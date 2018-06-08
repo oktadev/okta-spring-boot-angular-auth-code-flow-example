@@ -12,7 +12,6 @@ export class LoginPage {
 
   login() {
     let port = (location.port ? ':' + location.port : '');
-    console.log('port', port);
     if (port === ':8100') {
       port = ':8080';
     }

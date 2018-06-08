@@ -20,11 +20,10 @@ export class HomePage {
       if (user === null) {
         this.navCtrl.push('LoginPage');
       } else {
-        this.name = user.sub;
+        this.name = user.name;
         this.holdingsProvider.loadHoldings();
       }
     })
-
   }
 
   addHolding(): void {
@@ -40,6 +39,6 @@ export class HomePage {
   }
 
   logout() {
-    this.userProvider.logout();
+    this.userProvider.logout().subscribe(() => this.navCtrl.push('LoginPage'));
   }
 }
