@@ -4,7 +4,6 @@ import { Observable } from 'rxjs/Observable';
 import { forkJoin } from 'rxjs/observable/forkJoin';
 import { timeoutWith } from 'rxjs/operators';
 import 'rxjs/add/observable/throw';
-import { OAuthService } from 'angular-oauth2-oidc';
 
 interface Holding {
   crypto: string,
@@ -16,11 +15,11 @@ interface Holding {
 @Injectable()
 export class HoldingsProvider {
 
-  public HOLDINGS_API = 'http://localhost:8080/api/holdings';
+  public HOLDINGS_API = '/api/holdings';
   public holdings: Holding[] = [];
   public pricesUnavailable: boolean = false;
 
-  constructor(private http: HttpClient, private oauthService: OAuthService) {
+  constructor(private http: HttpClient) {
   }
 
   addHolding(holding: Holding): void {
@@ -39,18 +38,14 @@ export class HoldingsProvider {
     console.error('ERROR: ', error);
   }
 
-  getHeaders(): HttpHeaders {
-    return new HttpHeaders().set('Authorization', this.oauthService.authorizationHeader())
-  }
-
   saveHoldings(): void {
-    this.http.post(this.HOLDINGS_API, this.holdings, {headers: this.getHeaders()}).subscribe(data => {
+    this.http.post(this.HOLDINGS_API, this.holdings).subscribe(data => {
       console.log('holdings', data);
     }, this.onError);
   }
 
   loadHoldings(): void {
-    this.http.get(this.HOLDINGS_API, {headers: this.getHeaders()}).subscribe((holdings: Holding[]) => {
+    this.http.get(this.HOLDINGS_API).subscribe((holdings: Holding[]) => {
       if (holdings !== null) {
         this.holdings = holdings;
         this.fetchPrices();

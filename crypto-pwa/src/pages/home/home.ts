@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { NavController, IonicPage } from 'ionic-angular';
 import { HoldingsProvider } from '../../providers/holdings/holdings';
-import { OAuthService } from 'angular-oauth2-oidc';
+import { UserProvider } from '../../providers/user/user';
 
 @IonicPage()
 @Component({
@@ -9,16 +9,22 @@ import { OAuthService } from 'angular-oauth2-oidc';
   templateUrl: 'home.html'
 })
 export class HomePage {
+  name;
 
   constructor(private navCtrl: NavController, private holdingsProvider: HoldingsProvider,
-              private oauthService: OAuthService) {
+              private userProvider: UserProvider) {
   }
 
   ionViewDidLoad(): void {
-    if (!this.oauthService.hasValidIdToken()) {
-      this.navCtrl.push('LoginPage');
-    }
-    this.holdingsProvider.loadHoldings();
+    this.userProvider.getUser().subscribe((user: any) => {
+      if (user === null) {
+        this.navCtrl.push('LoginPage');
+      } else {
+        this.name = user.sub;
+        this.holdingsProvider.loadHoldings();
+      }
+    })
+
   }
 
   addHolding(): void {
@@ -33,15 +39,7 @@ export class HomePage {
     this.holdingsProvider.fetchPrices(refresher);
   }
 
-  get name() {
-    const claims: any = this.oauthService.getIdentityClaims();
-    if (!claims) {
-      return null;
-    }
-    return claims.name;
-  }
-
   logout() {
-    this.oauthService.logOut();
+    this.userProvider.logout();
   }
 }
