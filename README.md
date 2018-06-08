@@ -1,6 +1,6 @@
 # Spring Boot, Angular, and OAuth's 🥇 Standard: Authorization Code Flow!
  
-This example app shows how to use [Spring Boot] and [Angular] in a singular artifact.
+This example app shows how to use [Spring Boot](https://spring.io/projects/spring-boot) and [Angular](https://angular.io) in a singular artifact.
 
 > Make JAR, not WAR! -- [Josh Long](https://twitter.com/starbuxman)
 
@@ -10,7 +10,7 @@ Please read [The Hitchhiker's Guide to Testing Spring Boot APIs and Angular Comp
 
 **Prerequisites:** [Java 8](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html) and [Node.js](https://nodejs.org/).
 
-> Note: I challenge you to install Java 11 and make it work so that's the minimum! I'll send you a free 🍺 somehow!
+> Note: I challenge you to install Java 11 and make it work with this example. I'll send you a free 🍺 somehow!
 
 > [Okta](https://developer.okta.com/) has Authentication and User Management APIs that reduce development time with instant-on, scalable user infrastructure. Okta's intuitive API and expert support make it easy for developers to authenticate, manage, and secure users and roles in any application.
 
