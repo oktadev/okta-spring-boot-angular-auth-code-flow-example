@@ -189,10 +189,10 @@
                                     <goal>copy-resources</goal>
                                 </goals>
                                 <configuration>
-                                    <outputDirectory>${basedir}/target/static</outputDirectory>
+                                    <outputDirectory>${basedir}/target/classes/static</outputDirectory>
                                     <resources>
                                         <resource>
-                                            <directory>../crypto-pwa/dist</directory>
+                                            <directory>../crypto-pwa/www</directory>
                                         </resource>
                                     </resources>
                                 </configuration>
@@ -231,7 +231,7 @@
                                 <goals>
                                     <goal>npm</goal>
                                 </goals>
-                                <phase>test</phase>
+                                <phase>compile</phase>
                                 <configuration>
                                     <arguments>run build --prod</arguments>
                                 </configuration>
