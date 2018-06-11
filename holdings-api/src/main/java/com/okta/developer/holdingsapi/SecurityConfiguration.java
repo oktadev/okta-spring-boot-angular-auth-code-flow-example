@@ -25,6 +25,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             .and()
                 .authorizeRequests()
                 .antMatchers("/", "/home", "/api/user").permitAll()
-                .anyRequest().authenticated();
+                .anyRequest().authenticated()
+            .and()
+                .requiresChannel()
+                .requestMatchers(r -> r.getHeader("x-forwarded-proto") != null)
+                .requiresSecure();
     }
 }

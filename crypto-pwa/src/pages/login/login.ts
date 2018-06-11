@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { IonicPage } from 'ionic-angular';
+import { UserProvider } from '../../providers/user/user';
 
 @IonicPage({
   name: 'LoginPage'
@@ -10,11 +11,10 @@ import { IonicPage } from 'ionic-angular';
 })
 export class LoginPage {
 
+  constructor(private userProvider: UserProvider) {
+  }
+
   login() {
-    let port = (location.port ? ':' + location.port : '');
-    if (port === ':8100') {
-      port = ':8080';
-    }
-    location.href = '//' + location.hostname + port + '/login';
+    this.userProvider.login();
   }
 }

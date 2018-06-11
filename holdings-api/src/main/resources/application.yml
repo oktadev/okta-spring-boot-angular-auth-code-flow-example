@@ -4,11 +4,13 @@ okta:
     token: XXX
 security:
     oauth2:
-        client:
-            access-token-uri: https://dev-158606.oktapreview.com/oauth2/default/v1/token
-            user-authorization-uri: https://dev-158606.oktapreview.com/oauth2/default/v1/authorize
-            client-id: 0oaf4aphnpJ3LkY8s0h7
-            client-secret: 8hHD_uJVwh9wt8Ca_uhNpctZGXHv2N1apTR2v4X0
-            scope: openid profile email
-        resource:
-            user-info-uri: https://dev-158606.oktapreview.com/oauth2/default/v1/userinfo
+      client:
+        access-token-uri: https://dev-158606.oktapreview.com/oauth2/default/v1/token
+        user-authorization-uri: https://dev-158606.oktapreview.com/oauth2/default/v1/authorize
+        client-id: 0oaf4aphnpJ3LkY8s0h7
+        client-secret: 8hHD_uJVwh9wt8Ca_uhNpctZGXHv2N1apTR2v4X0
+      resource:
+        user-info-uri: https://dev-158606.oktapreview.com/oauth2/default/v1/userinfo
+spring:
+  profiles:
+    active: @spring.profiles.active@

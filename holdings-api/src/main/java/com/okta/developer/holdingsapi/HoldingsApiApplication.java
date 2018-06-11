@@ -57,5 +57,4 @@ public class HoldingsApiApplication {
         defProperties.put("spring.profiles.default", "dev");
         app.setDefaultProperties(defProperties);
     }
-
 }

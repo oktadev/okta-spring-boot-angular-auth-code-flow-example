@@ -32,19 +32,15 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
-       <!-- <dependency>
+        <dependency>
             <groupId>com.okta.spring</groupId>
             <artifactId>okta-spring-boot-starter</artifactId>
             <version>${okta.version}</version>
-        </dependency>-->
+        </dependency>
         <dependency>
             <groupId>com.okta.spring</groupId>
             <artifactId>okta-spring-sdk</artifactId>
             <version>${okta.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.security.oauth.boot</groupId>
@@ -89,10 +85,6 @@
             <version>2.8.0</version>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-        </dependency>
     </dependencies>
 
     <build>
@@ -103,25 +95,25 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
-             <plugin>
-                 <groupId>org.apache.maven.plugins</groupId>
-                 <artifactId>maven-failsafe-plugin</artifactId>
-                 <version>2.21.0</version>
-                 <configuration>
-                     <additionalClasspathElements>
-                         <!-- see: https://github.com/spring-projects/spring-boot/issues/6254#issuecomment-281404852 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <version>2.21.0</version>
+                <configuration>
+                    <additionalClasspathElements>
+                        <!-- see: https://github.com/spring-projects/spring-boot/issues/6254#issuecomment-281404852 -->
                         <additionalClasspathElement>${basedir}/target/classes</additionalClasspathElement>
                     </additionalClasspathElements>
-                 </configuration>
-                 <executions>
-                      <execution>
-                          <goals>
-                              <goal>integration-test</goal>
-                              <goal>verify</goal>
-                          </goals>
-                      </execution>
-                 </executions>
-             </plugin>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>integration-test</goal>
+                            <goal>verify</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
@@ -161,13 +153,34 @@
                             <outputDirectory>${project.reporting.outputDirectory}/jacoco-merge</outputDirectory>
                             <destFile>${project.build.directory}/jacoco-merge.exec</destFile>
                             <fileSets>
-                              <fileSet>
-                                <directory>${project.build.directory}</directory>
-                                <includes>
-                                  <include>*.exec</include>
-                                </includes>
-                              </fileSet>
+                                <fileSet>
+                                    <directory>${project.build.directory}</directory>
+                                    <includes>
+                                        <include>*.exec</include>
+                                    </includes>
+                                </fileSet>
                             </fileSets>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-resources-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>default-resources</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>target/classes</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>src/main/resources</directory>
+                                    <filtering>true</filtering>
+                                </resource>
+                            </resources>
                         </configuration>
                     </execution>
                 </executions>
@@ -182,7 +195,6 @@
                 <activeByDefault>true</activeByDefault>
             </activation>
             <properties>
-                <!-- default Spring profiles -->
                 <spring.profiles.active>dev</spring.profiles.active>
             </properties>
         </profile>

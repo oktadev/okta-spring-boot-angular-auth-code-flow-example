@@ -1,6 +1,5 @@
 package com.okta.developer.holdingsapi;
 
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
@@ -14,6 +13,7 @@ import org.springframework.core.PriorityOrdered;
 import org.springframework.security.oauth2.client.filter.OAuth2ClientAuthenticationProcessingFilter;
 import org.springframework.security.web.FilterChainProxy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.Filter;
@@ -33,6 +33,10 @@ import java.io.IOException;
 public class OAuth2Configuration {
     public static final String SAVED_LOGIN_ORIGIN_URI = OAuth2Configuration.class.getName() + "_SAVED_ORIGIN";
 
+    public OAuth2Configuration() {
+        System.out.println("ACTIVE BABY!!");
+    }
+
     private final Logger log = LoggerFactory.getLogger(OAuth2Configuration.class);
 
     @Bean
@@ -44,9 +48,9 @@ public class OAuth2Configuration {
                 throws ServletException, IOException {
                 if (request.getRemoteUser() == null && request.getRequestURI().endsWith("/login")) {
                     String referrer = request.getHeader("referer");
-                    if (!StringUtils.isBlank(referrer) &&
+                    if (!StringUtils.isEmpty(referrer) &&
                         request.getSession().getAttribute(SAVED_LOGIN_ORIGIN_URI) == null) {
-                        log.debug("Saving login origin URI: {}", referrer);
+                        log.info("Saving login origin URI: {}", referrer);
                         request.getSession().setAttribute(SAVED_LOGIN_ORIGIN_URI, referrer);
                     }
                 }

@@ -50,7 +50,7 @@ public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccess
         Object savedReferrer = request.getSession().getAttribute(SAVED_LOGIN_ORIGIN_URI);
         if (savedReferrer != null) {
             String savedLoginOrigin = request.getSession().getAttribute(SAVED_LOGIN_ORIGIN_URI).toString();
-            log.debug("Redirecting to saved login origin URI: {}", savedLoginOrigin);
+            log.info("Redirecting to saved login origin URI: {}", savedLoginOrigin);
             request.getSession().removeAttribute(SAVED_LOGIN_ORIGIN_URI);
             return savedLoginOrigin;
         } else {

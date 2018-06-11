@@ -4,7 +4,6 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { PlatformMock, SplashScreenMock, StatusBarMock } from 'ionic-mocks-jest';
 import { MyApp } from './app.component';
-import { OAuthService } from 'angular-oauth2-oidc';
 import { UserProvider } from '../providers/user/user';
 import { Observable } from 'rxjs/Rx';
 

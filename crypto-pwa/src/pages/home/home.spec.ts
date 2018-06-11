@@ -20,7 +20,7 @@ describe('HomePage', () => {
       return this.holdings;
     }
   };
-  let loadHoldings, getIdentityClaims;
+  let loadHoldings;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -48,16 +48,6 @@ describe('HomePage', () => {
     fixture.detectChanges();
     expect(loadHoldings).toHaveBeenCalled();
   });
-
-  // Test that passes when holdings is empty
-  /*it('should show message with a button', () => {
-    component.ionViewDidLoad();
-    fixture.detectChanges();
-    expect(loadHoldings).toHaveBeenCalled();
-    const message: HTMLDivElement = fixture.debugElement.query(By.css('.message')).nativeElement;
-    expect(message.innerHTML).toMatch(/button/);
-    expect(message.innerHTML).toMatch(/Add Coins/);
-  });*/
 
   it('should show list of currencies', () => {
     component.ionViewDidLoad();
