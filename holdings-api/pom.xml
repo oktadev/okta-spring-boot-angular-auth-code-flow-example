@@ -24,7 +24,7 @@
         <java.version>1.8</java.version>
         <okta.version>0.5.0</okta.version>
         <frontend-maven-plugin.version>1.6</frontend-maven-plugin.version>
-        <node.version>v9.8.0</node.version>
+        <node.version>v8.10.0</node.version>
     </properties>
 
     <dependencies>
@@ -97,6 +97,7 @@
 
     <build>
         <defaultGoal>spring-boot:run</defaultGoal>
+        <finalName>holdings-app-${project.version}</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
@@ -176,6 +177,16 @@
 
     <profiles>
         <profile>
+            <id>dev</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <!-- default Spring profiles -->
+                <spring.profiles.active>dev</spring.profiles.active>
+            </properties>
+        </profile>
+        <profile>
             <id>prod</id>
             <build>
                 <plugins>
@@ -240,6 +251,9 @@
                     </plugin>
                 </plugins>
             </build>
+            <properties>
+                <spring.profiles.active>prod</spring.profiles.active>
+            </properties>
         </profile>
     </profiles>
 </project>
