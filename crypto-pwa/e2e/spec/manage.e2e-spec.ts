@@ -16,9 +16,9 @@ describe('Manage Holdings', () => {
   });
 
   beforeEach(() => {
-    browser.sleep(1000);
+    browser.sleep(2000);
     loginPage.clickLoginButton();
-    loginPage.login(process.env.E2E_USERNAME, process.env.E2E_PASSWORD);
+    // no need to login again since logout only invalidates the session - it doesn't logout from Okta
 
     const success = element.all(by.css('h1')).first();
     browser.wait(ec.visibilityOf(success), 5000).then(() => {
@@ -31,9 +31,6 @@ describe('Manage Holdings', () => {
   });
 
   it('should add and remove a holding', () => {
-    browser.sleep(1000);
-    // remove extra class that gets added by Ionic when page is reloaded
-    browser.executeScript("document.getElementsByClassName('message')[0].remove()");
     homePage.clickAddCoinsButton();
 
     browser.wait(ec.urlContains('add-holding'), 1000);

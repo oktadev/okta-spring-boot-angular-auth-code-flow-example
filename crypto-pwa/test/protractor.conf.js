@@ -9,7 +9,7 @@ exports.config = {
     'browserName': 'chrome'
   },
   directConnect: true,
-  baseUrl: 'http://localhost:8100/',
+  baseUrl: (process.env.TRAVIS) ? 'http://localhost:8080' : 'http://localhost:8100',
   framework: 'jasmine',
   jasmineNodeOpts: {
     showColors: true,
