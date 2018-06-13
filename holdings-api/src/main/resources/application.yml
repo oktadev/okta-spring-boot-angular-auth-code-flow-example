@@ -15,4 +15,8 @@ security:
 spring:
   profiles:
     active: @spring.profiles.active@
-debug: true
+logging:
+  level:
+    org:
+      springframework:
+        security: debug

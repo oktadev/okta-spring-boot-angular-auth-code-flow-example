@@ -8,6 +8,7 @@ describe('Manage Holdings', () => {
   let loginPage, homePage, addHoldingPage;
 
   beforeAll(() => {
+    browser.restart(); // because previous test doesn't fully log you out
     loginPage = new LoginPage();
     homePage = new HomePage();
     addHoldingPage = new AddHoldingPage();
@@ -18,7 +19,8 @@ describe('Manage Holdings', () => {
   beforeEach(() => {
     browser.sleep(1000); // to prevent button not clickable error
     loginPage.clickLoginButton();
-    // no need to login again since logout only invalidates the session - it doesn't logout from Okta
+    loginPage.login(process.env.E2E_USERNAME, process.env.E2E_PASSWORD);
+    loginPage.oktaLoginButton.click();
 
     const success = element.all(by.css('h1')).first();
     browser.wait(ec.visibilityOf(success), 5000).then(() => {
