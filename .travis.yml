@@ -31,7 +31,6 @@ script:
 - cd holdings-api && ./mvnw -q test # todo: change back to mvnw -q verify
 - ./mvnw -q clean package -Pprod -DskipTests
 - java -jar target/*.jar &
-- sleep 45s
 - cd ../crypto-pwa
 - npm run e2e
 notifications:
