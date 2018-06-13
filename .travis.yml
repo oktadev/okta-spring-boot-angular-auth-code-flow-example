@@ -23,7 +23,7 @@ before_install:
 - export CHROME_BIN=/usr/bin/google-chrome
 - export DISPLAY=:99.0
 - sh -e /etc/init.d/xvfb start
-- npm install -g ionic@3.20.0 codecov serve
+- npm install -g ionic@3.20.0 codecov
 - cd crypto-pwa && npm install
 script:
 - cd $TRAVIS_BUILD_DIR
@@ -31,7 +31,7 @@ script:
 - cd holdings-api && ./mvnw -q test # todo: change back to mvnw -q verify
 - ./mvnw -q clean package -Pprod -DskipTests
 - java -jar target/*.jar &
-- sleep 30s
+- sleep 45s
 - cd ../crypto-pwa
 - npm run e2e
 notifications:
