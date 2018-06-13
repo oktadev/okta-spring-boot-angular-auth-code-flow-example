@@ -1,4 +1,4 @@
-import { browser, element, by, protractor, ExpectedConditions as ec, $ } from 'protractor';
+import { browser, by, element, ExpectedConditions as ec } from 'protractor';
 import { LoginPage } from '../pages/login.po';
 import { AddHoldingPage } from '../pages/add-holding.po';
 import { HomePage } from '../pages/home.po';

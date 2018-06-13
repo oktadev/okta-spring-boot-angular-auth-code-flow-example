@@ -11,10 +11,9 @@ import { UserProvider } from '../../providers/user/user';
 })
 export class LoginPage {
 
-  constructor(private userProvider: UserProvider, private navCtrl: NavController) {
+  constructor(private userProvider: UserProvider, navCtrl: NavController) {
     userProvider.getUser().subscribe((user) => {
       if (user !== null) {
-        console.log('login routing back to home');
         navCtrl.push('HomePage');
       }
     });
