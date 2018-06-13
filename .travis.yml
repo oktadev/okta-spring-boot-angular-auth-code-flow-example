@@ -25,9 +25,8 @@ before_install:
 - sh -e /etc/init.d/xvfb start
 - npm install -g ionic@3.20.0
 - npm install -g codecov
-- cd crypto-pwa && npm install
-- cd $TRAVIS_BUILD_DIR
 script:
+- cd $TRAVIS_BUILD_DIR
 - chmod +x holdings-api/mvnw
 - cd holdings-api && ./mvnw -q test # todo: change back to mvnw -q verify
 - ./mvnw clean package -Pprod -DskipTests
