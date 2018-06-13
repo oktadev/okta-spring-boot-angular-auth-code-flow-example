@@ -30,8 +30,9 @@ script:
 - cd $TRAVIS_BUILD_DIR
 - chmod +x holdings-api/mvnw
 - cd holdings-api && ./mvnw -q test # todo: change back to mvnw -q verify
-- ./mvnw clean package -Pprod -DskipTests
+- ./mvnw -q clean package -Pprod -DskipTests
 - java -jar target/*.jar &
+- sleep 30s
 - cd ../crypto-pwa
 - npm run e2e
 notifications:
