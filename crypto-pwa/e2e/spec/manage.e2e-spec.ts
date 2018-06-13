@@ -16,7 +16,7 @@ describe('Manage Holdings', () => {
   });
 
   beforeEach(() => {
-    browser.sleep(2000);
+    browser.sleep(1000); // to prevent button not clickable error
     loginPage.clickLoginButton();
     // no need to login again since logout only invalidates the session - it doesn't logout from Okta
 
@@ -32,6 +32,8 @@ describe('Manage Holdings', () => {
 
   it('should add and remove a holding', () => {
     browser.sleep(1000);
+    // remove extra class that gets added by Ionic when page is reloaded
+    //browser.executeScript("document.getElementsByClassName('message')[0].remove()");
     homePage.clickAddCoinsButton();
 
     browser.wait(ec.urlContains('add-holding'), 1000);

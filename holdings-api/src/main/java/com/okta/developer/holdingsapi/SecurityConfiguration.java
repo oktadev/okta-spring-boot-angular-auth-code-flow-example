@@ -6,12 +6,19 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 
 @Configuration
 @EnableOAuth2Sso
 @EnableWebSecurity
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
+
+    private final LogoutSuccessHandler logoutSuccessHandler;
+
+    public SecurityConfiguration(OAuth2LogoutSuccessHandler logoutSuccessHandler) {
+        this.logoutSuccessHandler = logoutSuccessHandler;
+    }
 
     @Override
     public void configure(WebSecurity web) throws Exception {
@@ -26,6 +33,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/", "/home", "/api/user").permitAll()
                 .anyRequest().authenticated()
+            .and()
+                .logout().logoutUrl("/api/logout")
+                .logoutSuccessHandler(logoutSuccessHandler).permitAll()
             .and()
                 .requiresChannel()
                 .requestMatchers(r -> r.getHeader("x-forwarded-proto") != null)

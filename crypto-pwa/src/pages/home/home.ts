@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, IonicPage } from 'ionic-angular';
+import { App, IonicPage, NavController } from 'ionic-angular';
 import { HoldingsProvider } from '../../providers/holdings/holdings';
 import { UserProvider } from '../../providers/user/user';
 
@@ -12,12 +12,11 @@ export class HomePage {
   name;
 
   constructor(private navCtrl: NavController, private holdingsProvider: HoldingsProvider,
-              private userProvider: UserProvider) {
+              private userProvider: UserProvider, private app: App) {
   }
 
   ionViewDidLoad(): void {
     this.userProvider.getUser().subscribe((user: any) => {
-      console.log('user in home:', user);
       if (user === null) {
         this.navCtrl.push('LoginPage');
       } else {
@@ -40,6 +39,6 @@ export class HomePage {
   }
 
   logout() {
-    this.userProvider.logout().subscribe(() => this.navCtrl.push('LoginPage'));
+    this.userProvider.logout().subscribe(() => this.app.getRootNavs()[0].setRoot('LoginPage'));
   }
 }
