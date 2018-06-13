@@ -4,39 +4,41 @@ import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.okta.developer.holdingsapi.Holding;
 import com.okta.developer.holdingsapi.HoldingsApiApplication;
+import io.restassured.http.ContentType;
+import io.restassured.response.ExtractableResponse;
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.http.MediaType;
-import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.support.TestPropertySourceUtils;
 import org.springframework.util.SocketUtils;
 import org.springframework.util.StreamUtils;
-import org.springframework.web.client.ResponseErrorHandler;
 
-import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
+import static com.github.tomakehurst.wiremock.client.WireMock.containing;
+import static com.github.tomakehurst.wiremock.client.WireMock.matching;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
 import static com.spotify.hamcrest.pojo.IsPojo.pojo;
+import static io.restassured.RestAssured.given;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.text.MatchesPattern.matchesPattern;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
 @RunWith(SpringRunner.class)
@@ -49,49 +51,80 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
                     "okta.oauth2.discoveryDisabled=true",
                     "okta.client.orgUrl=http://localhost:${wiremock.server.port}",
                     "okta.oauth2.issuer=http://localhost:${wiremock.server.port}/oauth/issuer",
-                    "security.oauth2.resource.userInfoUri=http://localhost:${wiremock.server.port}/oauth/userInfoUri"
+                    "okta.oauth2.clientId=" + HoldingsApiIT.TEST_CLIENT_ID,
+                    "okta.oauth2.clientSecret=" + HoldingsApiIT.TEST_CLIENT_SECRET,
+                    "security.oauth2.resource.userInfoUri=http://localhost:${wiremock.server.port}/oauth/userInfoUri",
+                    "security.oauth2.client.accessTokenUri=http://localhost:${wiremock.server.port}/oauth/token",
+                    "security.oauth2.client.userAuthorizationUri=http://localhost:${wiremock.server.port}/oauth/authorize"
                 })
 public class HoldingsApiIT {
 
     private final static String TEST_ACCESS_TOKEN = "fake-access-token";
     private final static String TEST_USER_EMAIl = "joe.coder@example.com";
     private final static String TEST_USER_ID = "user-id-123";
+    final static String TEST_CLIENT_ID = "FAKE_CLIENT_ID";
+    final static String TEST_CLIENT_SECRET = "FAKE_CLIENT_SECRET";
 
     private WireMockServer wireMockServer;
 
     @Value("${wiremock.server.port}")
     private int mockServerPort;
 
-    @Autowired
-    private TestRestTemplate restTemplate;
+    @LocalServerPort
+    int applicationPort;
 
-    @PostConstruct
-    private void configureRestTemplate() {
+    private ExtractableResponse performLogin() {
+        String expectedRedirect = Pattern.quote(
+                "http://localhost:" + mockServerPort + "/oauth/authorize" +
+                "?client_id=" + TEST_CLIENT_ID +
+                "&redirect_uri=http://localhost:" + applicationPort +"/login" +
+                "&response_type=code" +
+                "&scope=profile%20email%20openid" +
+                "&state=")+".{6}";
 
-        restTemplate.getRestTemplate().setInterceptors(Collections.singletonList((request, body, execution) -> {
-            request.getHeaders().add("Authorization", "Bearer "+ TEST_ACCESS_TOKEN);
-            return execution.execute(request, body);
-        }));
+        ExtractableResponse response1 = given()
+            .redirects()
+                .follow(false)
+            .accept(ContentType.JSON)
+        .when()
+            .get("http://localhost:" + applicationPort + "/login")
+        .then()
+            .statusCode(302)
+            .header("Location", matchesPattern(expectedRedirect))
+        .extract();
 
-        restTemplate.getRestTemplate().setErrorHandler(new ResponseErrorHandler() {
-            @Override
-            public boolean hasError(ClientHttpResponse response) throws IOException {
-                return !response.getStatusCode().is2xxSuccessful();
-            }
+        String redirectUrl = response1.header("Location");
+        String state = redirectUrl.substring(redirectUrl.lastIndexOf('=')+1);
+        String code = "TEST_CODE";
+        String requestUrl = "http://localhost:" + applicationPort + "/login?code=" + code + "&state=" + state;
 
-            @Override
-            public void handleError(ClientHttpResponse response) throws IOException {
-                String body = StreamUtils.copyToString(response.getBody(), StandardCharsets.UTF_8);
-                Assert.fail("Http response failed with non-2xx status code: " + response.getStatusCode() +"\n" +
-                        "body:\n" + body);
-            }
-        });
+        return given()
+            .accept(ContentType.JSON)
+            .cookies(response1.cookies())
+            .redirects()
+                .follow(false)
+        .when()
+            .get(requestUrl)
+        .then()
+            .statusCode(302)
+        .extract();
     }
 
     @Test
     public void testGetHoldings() {
 
-        List<Holding> holdings = Arrays.asList(restTemplate.getForObject("/api/holdings", Holding[].class));
+        ExtractableResponse response = given()
+            .accept(ContentType.JSON)
+            .cookies(performLogin().cookies())
+            .redirects()
+                .follow(false)
+        .when()
+            .get("http://localhost:" + applicationPort+"/api/holdings")
+        .then()
+            .statusCode(200)
+            .extract();
+
+        List<Holding> holdings = Arrays.asList(response.body().as(Holding[].class));
 
         // use Spotify's hamcrest-pojo to validate the objects
         assertThat(holdings, contains(
@@ -120,7 +153,23 @@ public class HoldingsApiIT {
                     .setAmount("amount-2")
         };
 
-        List<Holding> outputHoldings = Arrays.asList(restTemplate.postForObject("/api/holdings", inputHoldings, Holding[].class));
+        // get a vaild csrf token
+        ExtractableResponse loginResponse = performLogin();
+
+        ExtractableResponse response2 = given().log().everything() // TODO remove log
+            .accept(ContentType.JSON)
+            .cookie("JSESSIONID", loginResponse.cookies().get("JSESSIONID"))
+            .header("X-XSRF-TOKEN", loginResponse.cookies().get("XSRF-TOKEN"))
+            .body(inputHoldings)
+            .redirects()
+                .follow(false)
+        .when()
+            .post("http://localhost:" + applicationPort + "/api/holdings")
+        .then().log().everything()  // TODO remove log
+            .statusCode(200)
+            .extract();
+
+        List<Holding> outputHoldings = Arrays.asList(response2.body().as(Holding[].class));
 
         // output is the same as the input
         assertThat(outputHoldings, contains(
@@ -160,12 +209,29 @@ public class HoldingsApiIT {
         String body = StreamUtils.copyToString(getClass().getResourceAsStream("/its/user.json"), StandardCharsets.UTF_8);
 
         // respond to GET for user
-        wireMockServer.stubFor(WireMock.get("/api/v1/users/" + TEST_USER_EMAIl)
+        wireMockServer.stubFor(WireMock.get("/api/v1/users/" + TEST_USER_ID)
                 .willReturn(aResponse().withBody(body)));
 
         // respond to PUT for user
         wireMockServer.stubFor(WireMock.put("/api/v1/users/" + TEST_USER_ID)
                 .willReturn(aResponse().withBody(body)));
+
+        // OAuth token
+        wireMockServer.stubFor(
+                WireMock.post(urlPathEqualTo("/oauth/token"))
+                            .withRequestBody(containing("grant_type=authorization_code"))
+                            .withRequestBody(containing("code=TEST_CODE&"))
+                            .withRequestBody(matching(".*" + Pattern.quote("redirect_uri=http%3A%2F%2Flocalhost%3A") + "\\d+" + Pattern.quote("%2Flogin") + ".*"))
+                            .willReturn(aResponse()
+                            .withHeader("Content-Type", "application/json;charset=UTF-8")
+                            .withBody(
+                                "{" +
+                                  "\"access_token\":\"" + TEST_ACCESS_TOKEN + "\",\n" +
+                                  "\"token_type\":\"Bearer\",\n" +
+                                  "\"expires_in\":3600,\n" +
+                                  "\"scope\":\"profile openid email\",\n" +
+                                  "\"id_token\":\"idTokenjwt\"\n" +
+                                "}")));
 
         // OAuth userInfoUri
         String userInfoBody = StreamUtils.copyToString(getClass().getResourceAsStream("/its/userInfo.json"), StandardCharsets.UTF_8);
@@ -176,7 +242,6 @@ public class HoldingsApiIT {
                         .withBody(userInfoBody)
                         .withHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE)
                 ));
-
     }
 
     public static class RandomPortInitializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
