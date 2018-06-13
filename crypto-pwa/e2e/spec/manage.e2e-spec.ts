@@ -16,11 +16,14 @@ describe('Manage Holdings', () => {
   });
 
   beforeEach(() => {
+    browser.sleep(1000);
     loginPage.clickLoginButton();
     loginPage.login(process.env.E2E_USERNAME, process.env.E2E_PASSWORD);
-    loginPage.oktaLoginButton.click();
 
-    browser.wait(ec.urlContains('home'), 5000);
+    const success = element.all(by.css('h1')).first();
+    browser.wait(ec.visibilityOf(success), 5000).then(() => {
+      expect(success.getText()).toMatch(/Welcome/);
+    });
   });
 
   afterEach(() => {
@@ -28,6 +31,9 @@ describe('Manage Holdings', () => {
   });
 
   it('should add and remove a holding', () => {
+    browser.sleep(1000);
+    // remove extra class that gets added by Ionic when page is reloaded
+    browser.executeScript("document.getElementsByClassName('message')[0].remove()");
     homePage.clickAddCoinsButton();
 
     browser.wait(ec.urlContains('add-holding'), 1000);

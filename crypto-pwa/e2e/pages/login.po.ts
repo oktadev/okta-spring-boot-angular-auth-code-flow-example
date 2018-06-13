@@ -5,7 +5,7 @@ export class LoginPage extends Page {
   username = element(by.name('username'));
   password = element(by.name('password'));
   oktaLoginButton = element(by.css('input[type=submit]'));
-  loginButton = element(by.css('#login'));
+  loginButton = element.all(by.css('#login')).last();
   logoutButton = element(by.css('#logout'));
   header = element(by.css('ion-title'));
 

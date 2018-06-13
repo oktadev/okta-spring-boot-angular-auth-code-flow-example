@@ -17,6 +17,7 @@ describe('Login', () => {
   });
 
   it('should fail to log in with bad password', () => {
+    browser.sleep(1000);
     loginPage.clickLoginButton();
     loginPage.login('admin', 'foo');
     const error = element.all(by.css('.infobox-error')).first();
@@ -40,6 +41,7 @@ describe('Login', () => {
   });
 
   it('should log out successfully', () => {
+    browser.sleep(1000);
     loginPage.logout();
     browser.wait(ec.urlContains('/#/login'), 2000);
     expect(loginPage.loginButton.isPresent());

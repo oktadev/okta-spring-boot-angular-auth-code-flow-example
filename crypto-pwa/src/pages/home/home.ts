@@ -17,6 +17,7 @@ export class HomePage {
 
   ionViewDidLoad(): void {
     this.userProvider.getUser().subscribe((user: any) => {
+      console.log('user in home:', user);
       if (user === null) {
         this.navCtrl.push('LoginPage');
       } else {

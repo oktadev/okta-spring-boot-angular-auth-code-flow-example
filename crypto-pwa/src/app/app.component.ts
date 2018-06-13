@@ -9,6 +9,7 @@ export class MyApp {
 
   constructor(userProvider: UserProvider) {
     userProvider.getUser().subscribe((user) => {
+      console.log('user in app', user);
       if (user == null) {
         this.rootPage = 'LoginPage';
       } else {
