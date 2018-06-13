@@ -31,6 +31,7 @@ describe('Manage Holdings', () => {
   });
 
   it('should add and remove a holding', () => {
+    browser.sleep(1000);
     homePage.clickAddCoinsButton();
 
     browser.wait(ec.urlContains('add-holding'), 1000);
