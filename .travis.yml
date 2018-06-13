@@ -31,7 +31,7 @@ script:
 - cd holdings-api && ./mvnw -q test # todo: change back to mvnw -q verify
 - ./mvnw -q clean package -Pprod -DskipTests
 - java -jar target/*.jar &
-- cd ../crypto-pwa && npm run build --prod
+- cd ../crypto-pwa && ionic serve &
 - npm run e2e
 notifications:
   webhooks:
