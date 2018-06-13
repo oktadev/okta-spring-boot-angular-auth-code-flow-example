@@ -30,17 +30,23 @@ cd spring-rocks
 
 This will get a copy of the project installed locally. To install all of its dependencies and start each app, follow the instructions below.
 
-To run the server, cd into the `holdings-api` folder and run:
+To run the server, cd into the `holdings-api` directory and run:
  
 ```bash
 ./mvnw spring-boot:run
 ```
 
-To run the client, cd into the `crypto-pwa` folder and run:
+To run the client, cd into the `crypto-pwa` directory and run:
  
 ```bash
 npm install -g ionic
 npm i && ionic serve
+```
+
+To package everything into a single JAR for deployment, run the following command in the `holdings-api` directory.
+
+```bash
+./mvnw package -Pprod
 ```
 
 ### Setup Okta
@@ -63,17 +69,31 @@ For the Okta Java SDK to talk to Okta’s API, you’ll need to create an API to
 
 #### Okta App Configuration
 
-Open `holdings-api/src/main/resources/application.properties` and add your API token as a property. While you're there, set the `issuer` and `clientId` to match your OIDC application.
+Open `holdings-api/src/main/resources/application.yml` and add your API token as a property. While you're there, set the `issuer` and `clientId` to match your OIDC application.
 
 **NOTE:** The value of `{yourOktaDomain}` should be something like `dev-123456.oktapreview.com`. Make sure you don't include `-admin` in the value!
 
 ```properties
-okta.oauth2.orgUrl=https://{yourOktaDomain}.com
-okta.oauth2.issuer=https://{yourOktaDomain}.com/oauth2/default
-okta.oauth2.clientId={yourClientId}
-okta.client.token=XXX
+okta:
+  client:
+    orgUrl: https://{yourOktaDomain}.com
+    token: XXX
+security:
+    oauth2:
+        client:
+            access-token-uri: https://{yourOktaDomain}.com/oauth2/default/v1/token
+            user-authorization-uri: https://{yourOktaDomain}.com/oauth2/default/v1/authorize
+            client-id: {yourClientId}
+            client-secret: {yourClientSecret}
+            scope: openid profile email
+        resource:
+            user-info-uri: https://{yourOktaDomain}.com/oauth2/default/v1/userinfo
 ```
 
+<!-- okta.oauth2.orgUrl=https://{yourOktaDomain}.com
+okta.oauth2.issuer=https://{yourOktaDomain}.com/oauth2/default
+okta.oauth2.clientId={yourClientId}
+okta.client.token=XXX -->
 ## Links
 
 This example uses the following libraries provided by Okta:
