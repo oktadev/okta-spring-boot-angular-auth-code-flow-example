@@ -26,6 +26,7 @@ before_install:
 - npm install -g ionic@3.20.0
 - npm install -g codecov
 - cd crypto-pwa && npm install
+- cd $TRAVIS_BUILD_DIR
 script:
 - chmod +x holdings-api/mvnw
 - cd holdings-api && ./mvnw -q test # todo: change back to mvnw -q verify
