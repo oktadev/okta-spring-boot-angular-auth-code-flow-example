@@ -28,8 +28,8 @@ before_install:
 script:
 - cd $TRAVIS_BUILD_DIR
 - chmod +x holdings-api/mvnw
-- cd holdings-api && ./mvnw -q test
-- "./mvnw -q clean package -Pprod -DskipTests"
+- cd holdings-api && ./mvnw -q verify
+- ./mvnw -q clean package -Pprod -DskipTests
 - java -jar target/*.jar &
 - cd ../crypto-pwa && npm run e2e
 notifications:
