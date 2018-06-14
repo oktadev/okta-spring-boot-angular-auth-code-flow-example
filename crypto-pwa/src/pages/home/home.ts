@@ -40,7 +40,6 @@ export class HomePage {
 
   logout() {
     this.userProvider.logout().subscribe((response: any) => {
-      console.log(response);
       if (response.logoutUrl) {
         location.href = response.logoutUrl + "?id_token_hint=" + response.idToken + "&post_logout_redirect_uri=" + window.location.origin;
       } else {
