@@ -26,7 +26,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = HoldingsApiApplication.class)
+@SpringBootTest(classes = HoldingsApiApplication.class,
+                properties = {
+                    "okta.client.token=FAKE_TEST_TOKEN",
+                    "okta.client.orgUrl=https://example.com/not-used"})
 public class UserControllerTest {
 
     private MockMvc restUserMockMvc;

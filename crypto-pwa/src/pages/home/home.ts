@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, IonicPage } from 'ionic-angular';
+import { App, IonicPage, NavController } from 'ionic-angular';
 import { HoldingsProvider } from '../../providers/holdings/holdings';
 import { UserProvider } from '../../providers/user/user';
 
@@ -12,7 +12,7 @@ export class HomePage {
   name;
 
   constructor(private navCtrl: NavController, private holdingsProvider: HoldingsProvider,
-              private userProvider: UserProvider) {
+              private userProvider: UserProvider, private app: App) {
   }
 
   ionViewDidLoad(): void {
@@ -39,6 +39,12 @@ export class HomePage {
   }
 
   logout() {
-    this.userProvider.logout().subscribe(() => this.navCtrl.push('LoginPage'));
+    this.userProvider.logout().subscribe((response: any) => {
+      if (response.logoutUrl) {
+        location.href = response.logoutUrl + "?id_token_hint=" + response.idToken + "&post_logout_redirect_uri=" + window.location.origin;
+      } else {
+        this.app.getRootNavs()[0].setRoot('LoginPage')
+      }
+    });
   }
 }

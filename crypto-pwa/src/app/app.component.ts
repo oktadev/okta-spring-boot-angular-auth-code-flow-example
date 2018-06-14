@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { UserProvider } from '../providers/user/user';
 
 @Component({
@@ -7,12 +7,10 @@ import { UserProvider } from '../providers/user/user';
 export class MyApp {
   rootPage: any = 'HomePage';
 
-  constructor(userProvider: UserProvider) {
+  constructor(private userProvider: UserProvider) {
     userProvider.getUser().subscribe((user) => {
-      if (user == null) {
+      if (user === null) {
         this.rootPage = 'LoginPage';
-      } else {
-        this.rootPage = 'HomePage';
       }
     });
   }

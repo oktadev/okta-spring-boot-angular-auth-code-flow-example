@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage } from 'ionic-angular';
+import { App, IonicPage, NavController } from 'ionic-angular';
 import { UserProvider } from '../../providers/user/user';
 
 @IonicPage({
@@ -11,7 +11,12 @@ import { UserProvider } from '../../providers/user/user';
 })
 export class LoginPage {
 
-  constructor(private userProvider: UserProvider) {
+  constructor(private userProvider: UserProvider, private app: App) {
+    userProvider.getUser().subscribe((user) => {
+      if (user !== null) {
+        this.app.getRootNavs()[0].setRoot('HomePage');
+      }
+    });
   }
 
   login() {
