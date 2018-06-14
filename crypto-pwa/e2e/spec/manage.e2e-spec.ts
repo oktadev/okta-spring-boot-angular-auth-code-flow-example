@@ -8,7 +8,6 @@ describe('Manage Holdings', () => {
   let loginPage, homePage, addHoldingPage;
 
   beforeAll(() => {
-    browser.restart(); // because previous test doesn't fully log you out
     loginPage = new LoginPage();
     homePage = new HomePage();
     addHoldingPage = new AddHoldingPage();
@@ -34,8 +33,6 @@ describe('Manage Holdings', () => {
 
   it('should add and remove a holding', () => {
     browser.sleep(1000);
-    // remove extra class that gets added by Ionic when page is reloaded
-    //browser.executeScript("document.getElementsByClassName('message')[0].remove()");
     homePage.clickAddCoinsButton();
 
     browser.wait(ec.urlContains('add-holding'), 1000);

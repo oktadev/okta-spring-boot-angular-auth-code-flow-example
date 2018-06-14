@@ -42,10 +42,6 @@
             <artifactId>okta-spring-sdk</artifactId>
             <version>${okta.version}</version>
         </dependency>
-       <!-- <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-security</artifactId>
-        </dependency>-->
         <dependency>
             <groupId>org.springframework.security.oauth.boot</groupId>
             <artifactId>spring-security-oauth2-autoconfigure</artifactId>
