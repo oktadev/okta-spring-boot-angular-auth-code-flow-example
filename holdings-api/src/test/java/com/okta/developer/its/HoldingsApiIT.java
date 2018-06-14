@@ -60,7 +60,6 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 public class HoldingsApiIT {
 
     private final static String TEST_ACCESS_TOKEN = "fake-access-token";
-    private final static String TEST_USER_EMAIl = "joe.coder@example.com";
     private final static String TEST_USER_ID = "user-id-123";
     final static String TEST_CLIENT_ID = "FAKE_CLIENT_ID";
     final static String TEST_CLIENT_SECRET = "FAKE_CLIENT_SECRET";
