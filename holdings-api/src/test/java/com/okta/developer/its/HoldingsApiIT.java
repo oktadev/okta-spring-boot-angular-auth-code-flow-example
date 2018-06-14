@@ -51,8 +51,8 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
                     "okta.oauth2.discoveryDisabled=true",
                     "okta.client.orgUrl=http://localhost:${wiremock.server.port}",
                     "okta.oauth2.issuer=http://localhost:${wiremock.server.port}/oauth/issuer",
-                    "okta.oauth2.clientId=" + HoldingsApiIT.TEST_CLIENT_ID,
-                    "okta.oauth2.clientSecret=" + HoldingsApiIT.TEST_CLIENT_SECRET,
+                    "security.oauth2.client.clientId=" + HoldingsApiIT.TEST_CLIENT_ID,
+                    "security.oauth2.client.clientSecret=" + HoldingsApiIT.TEST_CLIENT_SECRET,
                     "security.oauth2.resource.userInfoUri=http://localhost:${wiremock.server.port}/oauth/userInfoUri",
                     "security.oauth2.client.accessTokenUri=http://localhost:${wiremock.server.port}/oauth/token",
                     "security.oauth2.client.userAuthorizationUri=http://localhost:${wiremock.server.port}/oauth/authorize"
