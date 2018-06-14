@@ -4,7 +4,7 @@ services:
 - docker
 language: node_js
 node_js:
-- 9.8.0
+- 8.10.0
 addons:
   apt:
     sources:
@@ -23,15 +23,15 @@ before_install:
 - export CHROME_BIN=/usr/bin/google-chrome
 - export DISPLAY=:99.0
 - sh -e /etc/init.d/xvfb start
-- npm install -g ionic@3.20.0
-- npm install -g codecov
+- npm install -g ionic@3.20.0 codecov
+- cd crypto-pwa && npm install
 script:
+- cd $TRAVIS_BUILD_DIR
 - chmod +x holdings-api/mvnw
 - cd holdings-api && ./mvnw -q verify
-- ./mvnw clean package -Pprod -DskipTests
+- ./mvnw -q clean package -Pprod -DskipTests
 - java -jar target/*.jar &
-- cd ../crypto-pwa
-- npm run e2e
+- cd ../crypto-pwa && npm run e2e
 notifications:
   webhooks:
     on_success: always
@@ -41,4 +41,4 @@ after_success:
 - cd $TRAVIS_BUILD_DIR && codecov
 env:
   matrix:
-    secure: jAScRJFhOfIPIb3ud9/c/MXmSjLBdudfVD4ItyJdpnq9IzymeKA2ZQVEm420Lb+czBSlz3mxbhVGpl5qRrwFY6kzjj3AA3MOtbgfuQfX9ZpU4WhUtiPexsJMMyYIOFPDRFoyqiI35Gth8GMOLDMaYtlRVRsHDWC6wcYTK3UIvq0zR4AOncgsNlwAaaPf8GDUUJ50C187WYI/Q6EBdaGlvVTUMZHbzCS5Z/2Ue1iZrrFkwvaUtvLTuklNMroDcFjOiL8FP8gDR92d896bbUpu0D0PScUr5512V55M1WLzztvJi5cZLwJghzK/52XTh/bRYK/AIaIagS67Bt+iiv4FVtdjSn4gYyNMWVFjZ+B4cOVOj7gmb7q+sOtDiBJvQClaVgwcfaOX/hj71c9p7C2OItt9CeqET4PzqX+TmLCRgOKKYxzR7nLgumUOGlfda0bOxBvW+h0i8CUx/6muGO8pjJVSs3D1fV14L8nZ+6ePhtuwZcnj1evfON9eFSMeoXd/rjoTYVtBu/X5Bqm7LtAtUpoBKy8CFVxsD0Kh2n1A2D2X9x15+BzfgzX1ge7FQQRklXY5UGJsy5BK9oyxEq0y8CR42fTeD/1ivXfZYMe4Evp+I8zaomrxNgsHydYnx1a3R3EaaZHfQL3MZLRsVMYxDunq4/0g1kD/Gekfj2FxF6I=
+    secure: Sr9qoZFwov73iN9zkQyz+quBoqqgOYU7mObwb9vSvi0ul07z2L4UUEiLMCIFva2E2HQXsBryIIneYZkp4CUeF9fipdiQfsXdAtILqHSoUrMYdGT0uLDnEJmF6O4FhOE8ZfAAf6Bxuj/b20TQQhme5k19TYk8vJyU3hUSFx9Gjlu7LIqSC+N/EHVeFJxT3chGcmmMt2YPJLHHnAnExVIOB8Ae1sULaG4qLfYeI0qUB4KaS2EGIQeqX1OGyN9om0jvCoIRbw6T0tKgVjDuyj7ZWEZi6OqkQIrna5XC9amG4/hw5iOllO6P1ISmi3tJYirMhUM4jkaL9LzzWKWxtWsQNtlcYAgNMb63bNMSVw7P3flwF7pTtaEki1hZIAauZfpEKtO3pMi+c2am5iPuG384Wt3Sy8zEAeAeBmvl8jkpwUD4JmPDDOfBnEEb+q2FC72BRzFqK9kF3+zIRZkzQ9uklNwG4GdLIc/ueg1juhzM+x9JxPX3FyK5OoYyo7fU14fFy95radQgF1kOS5I/wghe5z1hfvtzm4RGsy8AmhPt05sZfaZ4/MX8tJ0jDLM4a30CgRhzF7kzNuJGvWM+IEamHFqAu8iNErBhOZWoUShccDBiS0Arb38AurcPKQmNPVqCf5c333BMEkOg+fvjYjenZvo/PDBluk74uurKb911V6A=

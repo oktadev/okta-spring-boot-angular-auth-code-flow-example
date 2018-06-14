@@ -1,4 +1,4 @@
-import { browser, element, by, protractor, ExpectedConditions as ec, $ } from 'protractor';
+import { browser, by, element, ExpectedConditions as ec } from 'protractor';
 import { LoginPage } from '../pages/login.po';
 import { AddHoldingPage } from '../pages/add-holding.po';
 import { HomePage } from '../pages/home.po';
@@ -16,11 +16,15 @@ describe('Manage Holdings', () => {
   });
 
   beforeEach(() => {
+    browser.sleep(1000); // to prevent button not clickable error
     loginPage.clickLoginButton();
     loginPage.login(process.env.E2E_USERNAME, process.env.E2E_PASSWORD);
     loginPage.oktaLoginButton.click();
 
-    browser.wait(ec.urlContains('home'), 5000);
+    const success = element.all(by.css('h1')).first();
+    browser.wait(ec.visibilityOf(success), 5000).then(() => {
+      expect(success.getText()).toMatch(/Welcome/);
+    });
   });
 
   afterEach(() => {
@@ -28,6 +32,7 @@ describe('Manage Holdings', () => {
   });
 
   it('should add and remove a holding', () => {
+    browser.sleep(1000);
     homePage.clickAddCoinsButton();
 
     browser.wait(ec.urlContains('add-holding'), 1000);
