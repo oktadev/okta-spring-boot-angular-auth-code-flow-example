@@ -156,16 +156,17 @@ public class HoldingsApiIT {
         // get a vaild csrf token
         ExtractableResponse loginResponse = performLogin();
 
-        ExtractableResponse response2 = given().log().everything() // TODO remove log
+        ExtractableResponse response2 = given()
             .accept(ContentType.JSON)
-            .cookie("JSESSIONID", loginResponse.cookies().get("JSESSIONID"))
+            .contentType(ContentType.JSON)
+            .cookies(loginResponse.cookies())
             .header("X-XSRF-TOKEN", loginResponse.cookies().get("XSRF-TOKEN"))
             .body(inputHoldings)
             .redirects()
                 .follow(false)
         .when()
             .post("http://localhost:" + applicationPort + "/api/holdings")
-        .then().log().everything()  // TODO remove log
+        .then()
             .statusCode(200)
             .extract();
 
