@@ -12,7 +12,7 @@
 </ion-header>
 
 <ion-content padding>
-  <h1>Welcome, {{ name }}</h1>
+  <h1 *ngIf="name">Welcome, {{ name }}</h1>
   <div class="message" *ngIf="!holdingsProvider.holdings.length">
     <p><strong>cryptoPWA</strong> is a <strong>P</strong>rogressive <strong>W</strong>eb <strong>A</strong>pplication
       that allows you to keep track of the approximate worth of your cryptocurrency portfolio.</p>

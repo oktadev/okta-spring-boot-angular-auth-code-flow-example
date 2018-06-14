@@ -1,5 +1,5 @@
 import { Page } from '../pages/app.po';
-import { browser, protractor, ExpectedConditions as ec } from 'protractor';
+import { browser, ExpectedConditions as ec } from 'protractor';
 
 describe('App', () => {
   let page: Page;

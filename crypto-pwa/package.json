@@ -1,6 +1,6 @@
 {
   "name": "cryptopwa",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "author": "Okta Developers",
   "homepage": "http://developer.okta.com/",
   "description": "Ionic Cryptocurrency PWA with Holdings Data in Okta",
@@ -52,7 +52,6 @@
     "jest-preset-angular": "5.2.1",
     "null-loader": "0.1.1",
     "protractor": "5.3.1",
-    "serve": "^6.5.6",
     "ts-loader": "4.2.0",
     "ts-node": "6.0.0",
     "typescript": "2.8.3"

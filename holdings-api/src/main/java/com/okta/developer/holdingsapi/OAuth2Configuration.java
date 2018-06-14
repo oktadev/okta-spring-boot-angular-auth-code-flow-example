@@ -32,11 +32,6 @@ import java.io.IOException;
 @Profile("dev")
 public class OAuth2Configuration {
     public static final String SAVED_LOGIN_ORIGIN_URI = OAuth2Configuration.class.getName() + "_SAVED_ORIGIN";
-
-    public OAuth2Configuration() {
-        System.out.println("ACTIVE BABY!!");
-    }
-
     private final Logger log = LoggerFactory.getLogger(OAuth2Configuration.class);
 
     @Bean
