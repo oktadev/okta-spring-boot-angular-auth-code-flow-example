@@ -47,7 +47,7 @@ public class UserController {
 
     @PostMapping("/api/logout")
     public ResponseEntity<?> logout(HttpServletRequest request, Authentication authentication) {
-        // send redirect URL to client so they can initiate logout - doesn't work from the server side
+        // send logout URL to client so they can initiate logout - doesn't work from the server side
 
         OAuth2RestTemplate oauth2RestTemplate = this.templateFactory.getUserInfoRestTemplate();
         String idToken = (String) oauth2RestTemplate.getAccessToken().getAdditionalInformation().get("id_token");
