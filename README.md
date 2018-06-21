@@ -6,7 +6,7 @@ This example app shows how to use [Spring Boot](https://spring.io/projects/sprin
 
 If you want to be a kick-ass developer, you should write tests. I know it sucks and it seems like it sucks the life out of you, but it's totally worthwhile in the end. If you expect a system or example to live on the internet for more than a year, it needs automated nightly tests to prove it.
 
-Please read [The Hitchhiker's Guide to Testing Spring Boot APIs and Angular Components](https://developer.okta.com/blog/2018/05/02/testing-spring-boot-angular-components) to learn more about the app you're about to make into an _awesome artifact_.
+Please read [Deploy Your Secure Spring Boot + Angular PWA as a Single Artifact](https://developer.okta.com/blog/2018/06/18/spring-boot-angular-auth-code-flow) to learn more about the app you're about to make into an _awesome artifact_.
 
 **Prerequisites:** [Java 8](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html) and [Node.js](https://nodejs.org/).
 
@@ -103,7 +103,7 @@ This example uses the following libraries provided by Okta:
 
 ## Help
 
-Please post any questions as comments on the [blog post](https://developer.okta.com/blog/2018/01/23/replace-local-storage-with-okta-profile-attributes), or visit our [Okta Developer Forums](https://devforum.okta.com/). You can also email developers@okta.com if would like to create a support ticket.
+Please post any questions as comments on the [blog post](https://developer.okta.com/blog/2018/06/18/spring-boot-angular-auth-code-flow), or visit our [Okta Developer Forums](https://devforum.okta.com/). You can also email developers@okta.com if would like to create a support ticket.
 
 ## License
 
