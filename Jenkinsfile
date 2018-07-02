@@ -19,11 +19,10 @@ pipeline {
         }
         steps {
           container('maven') {
-            sh "cd holdings-api"
-            sh "CI=true mvn -q verify"
-            sh "CI=true npm -q clean package -Pprod -DskipTests"
-            sh "CI=true java -jar target/*.jar &"
-            sh "CI=true DISPLAY=:99 cd ../crypto-pwa && npm run e2e" 
+            sh "CI=true cd holdings-api && mvn -q verify"
+            sh "CI=true cd holdings-api && mvn -q clean package -Pprod -DskipTests"
+            sh "CI=true cd holdings-api && java -jar target/*.jar &"
+            sh "CI=true DISPLAY=:99 cd crypto-pwa && npm run e2e" 
               
             sh 'export VERSION=$PREVIEW_VERSION && skaffold build -f skaffold.yaml'
 
