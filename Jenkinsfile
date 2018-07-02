@@ -19,6 +19,7 @@ pipeline {
         }
         steps {
           container('maven') {
+            sh "npm install -g ionic@3.20.0"
             sh "cd holdings-api && mvn -q verify"
             sh "cd holdings-api && mvn -q clean package -Pprod -DskipTests"
             sh "cd holdings-api && java -jar target/*.jar &"
@@ -57,6 +58,7 @@ pipeline {
             }
           }
           container('maven') {
+            sh "npm install -g ionic@3.20.0"
             sh "cd holdings-api && mvn -q verify"
             sh "cd holdings-api && mvn -q clean package -Pprod -DskipTests"
             sh "cd holdings-api && java -jar target/*.jar &"
