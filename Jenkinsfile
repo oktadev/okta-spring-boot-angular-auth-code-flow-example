@@ -31,7 +31,7 @@ pipeline {
           }
 
           dir ('./charts/preview') {
-           container('nodejs') {
+           container('maven') {
              sh "make preview"
              sh "jx preview --app $APP_NAME --dir ../.."
            }
@@ -43,7 +43,7 @@ pipeline {
           branch 'master'
         }
         steps {
-          container('nodejs') {
+          container('maven') {
             // ensure we're not on a detached head
             sh "git checkout master"
             sh "git config --global credential.helper store"
@@ -53,7 +53,7 @@ pipeline {
             sh "echo \$(jx-release-version) > VERSION"
           }
           dir ('./charts/mraible') {
-            container('nodejs') {
+            container('maven') {
               sh "make tag"
             }
           }
@@ -76,7 +76,7 @@ pipeline {
         }
         steps {
           dir ('./charts/mraible') {
-            container('nodejs') {
+            container('maven') {
               sh 'jx step changelog --version v\$(cat ../../VERSION)'
 
               // release the helm chart
