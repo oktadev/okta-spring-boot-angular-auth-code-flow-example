@@ -1,6 +1,6 @@
 pipeline {
     agent {
-        label "jenkins-nodejs"
+        label "jenkins-maven"
     }
     environment {
       ORG               = 'mraible'
@@ -18,12 +18,14 @@ pipeline {
           HELM_RELEASE = "$PREVIEW_NAMESPACE".toLowerCase()
         }
         steps {
-          container('nodejs') {
-            sh "npm install"
-            sh "CI=true DISPLAY=:99 npm test"
-
+          container('maven') {
+            sh "cd holdings-api"
+            sh "CI=true mvn -q verify"
+            sh "CI=true npm -q clean package -Pprod -DskipTests"
+            sh "CI=true java -jar target/*.jar &"
+            sh "CI=true DISPLAY=:99 cd ../crypto-pwa && npm run e2e" 
+              
             sh 'export VERSION=$PREVIEW_VERSION && skaffold build -f skaffold.yaml'
-
 
             sh "jx step post build --image $DOCKER_REGISTRY/$ORG/$APP_NAME:$PREVIEW_VERSION"
           }
@@ -55,9 +57,12 @@ pipeline {
               sh "make tag"
             }
           }
-          container('nodejs') {
-            sh "npm install"
-            sh "CI=true DISPLAY=:99 npm test"
+          container('maven') {
+            sh "cd holdings-api"
+            sh "CI=true mvn -q verify"
+            sh "CI=true npm -q clean package -Pprod -DskipTests"
+            sh "CI=true java -jar target/*.jar &"
+            sh "CI=true DISPLAY=:99 cd ../crypto-pwa && npm run e2e" 
 
             sh 'export VERSION=`cat VERSION` && skaffold build -f skaffold.yaml'
 
