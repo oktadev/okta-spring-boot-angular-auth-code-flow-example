@@ -246,6 +246,13 @@
                                 </configuration>
                             </execution>
                             <execution>
+                                <id>npm install</id>
+                                <goals>
+                                    <goal>npm</goal>
+                                </goals>
+                                <phase>generate-resources</phase>
+                            </execution>
+                            <execution>
                                 <id>ionic test</id>
                                 <goals>
                                     <goal>npm</goal>
