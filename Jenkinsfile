@@ -14,7 +14,7 @@ pipeline {
         }
         steps {
           container('nodejs') {
-            sh "npm install -g ionic@3.20.0"
+            sh "npm install -g ionic@3.20.0 @ionic/app-scripts@3.1.9"
             sh "cd crypto-pwa && npm install"
           }
         }
