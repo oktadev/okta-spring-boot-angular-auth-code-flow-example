@@ -251,6 +251,9 @@
                                     <goal>npm</goal>
                                 </goals>
                                 <phase>generate-resources</phase>
+                                <configuration>
+                                    <arguments>install --unsafe-perm</arguments>
+                                </configuration>
                             </execution>
                             <execution>
                                 <id>ionic test</id>
