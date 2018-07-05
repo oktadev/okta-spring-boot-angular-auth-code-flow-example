@@ -25,7 +25,7 @@ pipeline {
           //sh "DISPLAY=:99 cd crypto-pwa && npm run e2e" 
 
           dir ('./holdings-api/target') {
-            sh 'export VERSION=$PREVIEW_VERSION && skaffold run -f ../../skaffold.yaml'
+            sh 'export VERSION=$PREVIEW_VERSION && skaffold run -f ../skaffold.yaml'
           }
 
           sh "jx step post build --image $DOCKER_REGISTRY/$ORG/$APP_NAME:$PREVIEW_VERSION"
