@@ -5,7 +5,7 @@ build:
     envTemplate:
       template: "{{.DOCKER_REGISTRY}}/mraible/mraible:{{.VERSION}}"
   artifacts:
-  - imageName: changeme
+  - imageName: crypto-pwa 
     workspace: .
     docker: {}
   local: {}
