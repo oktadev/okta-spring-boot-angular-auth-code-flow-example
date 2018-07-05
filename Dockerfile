@@ -10,4 +10,4 @@ CMD echo "The application will start in ${APP_SLEEP}s..." && \
 
 EXPOSE 8080
 
-ADD *.jar /app.jar
+ADD holdings-api/target/*.jar /app.jar
