@@ -1,4 +1,4 @@
-peline {
+pipeline {
   agent {
       label "jenkins-maven"
   }
