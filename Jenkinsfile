@@ -23,8 +23,10 @@ pipeline {
             sh "cd holdings-api && mvn -q clean package -Pprod -DskipTests"
             sh "cd holdings-api && java -jar target/*.jar &"
             //sh "DISPLAY=:99 cd crypto-pwa && npm run e2e" 
-              
-            sh 'export VERSION=$PREVIEW_VERSION && skaffold build -f skaffold.yaml'
+
+            dir ('./holdings-api/target') {
+              sh 'export VERSION=$PREVIEW_VERSION && skaffold run -f ../skaffold.yaml'
+            }
 
             sh "jx step post build --image $DOCKER_REGISTRY/$ORG/$APP_NAME:$PREVIEW_VERSION"
           }
@@ -60,9 +62,11 @@ pipeline {
             sh "cd holdings-api && mvn -q verify"
             sh "cd holdings-api && mvn -q clean package -Pprod -DskipTests"
             sh "cd holdings-api && java -jar target/*.jar &"
-            //sh "DISPLAY=:99 cd crypto-pwa && npm run e2e" 
+            //sh "DISPLAY=:99 cd crypto-pwa && npm run e2e"
 
-            sh 'export VERSION=`cat VERSION` && skaffold build -f skaffold.yaml'
+            dir ('./holdings-api/target') {
+              sh 'export VERSION=`cat VERSION` && skaffold build -f skaffold.yaml'
+            }
 
             sh "jx step post build --image $DOCKER_REGISTRY/$ORG/$APP_NAME:\$(cat VERSION)"
           }
