@@ -1,13 +1,14 @@
-FROM openjdk:8-jre-alpine
-
-ENV SPRING_OUTPUT_ANSI_ENABLED=ALWAYS \
-    APP_SLEEP=0 \
-    JAVA_OPTS=""
-
-CMD echo "The application will start in ${APP_SLEEP}s..." && \
-    sleep ${APP_SLEEP} && \
-    java ${JAVA_OPTS} -Djava.security.egd=file:/dev/./urandom -jar /app.jar
-
+FROM openjdk:8-jdk-slim
+ENV PORT 8080
+ENV CLASSPATH /opt/lib
 EXPOSE 8080
 
-ADD holdings-api/target/*.jar /app.jar
+# copy pom.xml and wildcards to avoid this command failing if there's no target/lib directory
+COPY pom.xml target/lib* /opt/lib/
+
+# NOTE we assume there's only 1 jar in the target dir
+# but at least this means we don't have to guess the name
+# we could do with a better way to know the name - or to always create an app.jar or something
+COPY target/*.jar /opt/app.jar
+WORKDIR /opt
+CMD ["java", "-jar", "app.jar"]

@@ -8,7 +8,7 @@ ifeq ($(OS),Darwin)
 else ifeq ($(OS),Linux)
 	sed -i -e "s/version:.*/version: $(PREVIEW_VERSION)/" Chart.yaml
 	sed -i -e "s/version:.*/version: $(PREVIEW_VERSION)/" ../*/Chart.yaml
-	sed -i -e "s/repository: .*/repository: $(DOCKER_REGISTRY)\/mraible\/mraible/" values.yaml
+	sed -i -e "s|repository: .*|repository: $(DOCKER_REGISTRY)\/mraible\/jx-demo|" values.yaml
 	sed -i -e "s/tag: .*/tag: $(PREVIEW_VERSION)/" values.yaml
 else
 	echo "platfrom $(OS) not supported to release from"
