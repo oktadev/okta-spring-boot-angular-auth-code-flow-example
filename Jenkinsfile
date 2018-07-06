@@ -4,7 +4,7 @@ pipeline {
     }
     environment {
       ORG               = 'mraible'
-      APP_NAME          = 'jx-demo'
+      APP_NAME          = 'okta-jenkinsx-demo'
       CHARTMUSEUM_CREDS = credentials('jenkins-x-chartmuseum')
     }
     stages {
@@ -19,11 +19,12 @@ pipeline {
         }
         steps {
           container('maven') {
-            sh "mvn versions:set -DnewVersion=$PREVIEW_VERSION"
-            sh "mvn install"
+            dir ('./holdings-api') {
+              sh "mvn versions:set -DnewVersion=$PREVIEW_VERSION"
+              sh "mvn install -Pprod"
+            }
+
             sh 'export VERSION=$PREVIEW_VERSION && skaffold build -f skaffold.yaml'
-
-
             sh "jx step post build --image $DOCKER_REGISTRY/$ORG/$APP_NAME:$PREVIEW_VERSION"
           }
 
@@ -48,19 +49,21 @@ pipeline {
             sh "jx step git credentials"
             // so we can retrieve the version in later steps
             sh "echo \$(jx-release-version) > VERSION"
-            sh "mvn versions:set -DnewVersion=\$(cat VERSION)"
+            dir ('./holdings-api') {
+              sh "mvn versions:set -DnewVersion=\$(cat VERSION)"
+            }
           }
-          dir ('./charts/jx-demo') {
+          dir ('./charts/okta-jenkinsx-demo') {
             container('maven') {
               sh "make tag"
             }
           }
           container('maven') {
-            sh 'mvn clean deploy'
+            dir ('./holdings-api') {
+              sh 'mvn clean deploy -Pprod'
+            }
 
             sh 'export VERSION=`cat VERSION` && skaffold build -f skaffold.yaml'
-
-
             sh "jx step post build --image $DOCKER_REGISTRY/$ORG/$APP_NAME:\$(cat VERSION)"
           }
         }
@@ -70,7 +73,7 @@ pipeline {
           branch 'master'
         }
         steps {
-          dir ('./charts/jx-demo') {
+          dir ('./charts/okta-jenkinsx-demo') {
             container('maven') {
               sh 'jx step changelog --version v\$(cat ../../VERSION)'
 

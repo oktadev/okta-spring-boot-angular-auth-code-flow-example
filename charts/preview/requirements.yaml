@@ -9,5 +9,5 @@ dependencies:
   repository: https://chartmuseum.build.cd.jenkins-x.io
   version: 2.3.56
 - alias: preview
-  name: jx-demo
-  repository: file://../jx-demo
+  name: okta-jenkinsx-demo
+  repository: file://../okta-jenkinsx-demo
