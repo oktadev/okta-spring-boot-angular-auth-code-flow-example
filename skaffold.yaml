@@ -1,0 +1,31 @@
+apiVersion: skaffold/v1alpha2
+kind: Config
+build:
+  tagPolicy:
+    envTemplate:
+      template: "{{.DOCKER_REGISTRY}}/mraible/okta-jenkinsx-demo:{{.VERSION}}"
+  artifacts:
+  - imageName: changeme
+    workspace: .
+    docker: {}
+  local: {}
+deploy:
+  kubectl:
+    manifests:
+profiles:
+- name: dev
+  build:
+    tagPolicy:
+      envTemplate:
+        template: "{{.DOCKER_REGISTRY}}/mraible/okta-jenkinsx-demo:{{.DIGEST_HEX}}"
+    artifacts:
+    - docker: {}
+    local: {}
+  deploy:
+    helm:
+      releases:
+      - name: okta-jenkinsx-demo
+        chartPath: charts/okta-jenkinsx-demo
+        setValueTemplates:
+          image.repository: "{{.DOCKER_REGISTRY}}/mraible/okta-jenkinsx-demo"
+          image.tag: "{{.TAG}}"
